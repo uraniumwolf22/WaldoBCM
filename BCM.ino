@@ -67,16 +67,16 @@ void serialEvent(){             //check serial and get data
         incomingdata += inChar;
         }
                             //change state according to recieved serial data
-    if(incomingdata == "w"){
+    if(incomingdata == "f"){
         bcmstate = 1;}
 
-    if(incomingdata == "s"){
+    if(incomingdata == "b"){
         bcmstate = 2;}
 
-    if(incomingdata == "a"){
+    if(incomingdata == "l"){
         bcmstate = 3;}
 
-    if(incomingdata == "d"){
+    if(incomingdata == "r"){
         bcmstate = 4;}
     incomingdata = "";
 }
