@@ -62,6 +62,9 @@ void loop(){
         calcspeed(1);
         right();}
     }
+    if(!powerstate){
+        halt();
+    }
 }
 //Detects if a serial event has taken place and changes the BCMstate accordingly
 void serialEvent(){             //check serial and get data
