@@ -2,6 +2,7 @@
 
 
 **PYTHON SERVER**
+
 Required python packages:
 -Pyserial
 
