@@ -12,7 +12,7 @@ String incomingdata = "";
 void setup(){
     //set up serial communication
     incomingdata.reserve(200);
-    Serial.begin(9600);
+    Serial.begin(115200);
     // set all the pin modes to output.
     pinMode(S1_S,OUTPUT);
     pinMode(S1_D,OUTPUT);
@@ -59,6 +59,9 @@ void loop(){
     if(bcmstate == 4){
         calcspeed(1);
         right();}
+    }
+    if(!powerstate){
+        halt();
 }
 //Detects if a serial event has taken place and changes the BCMstate accordingly
 void serialEvent(){             //check serial and get data
@@ -67,17 +70,22 @@ void serialEvent(){             //check serial and get data
         incomingdata += inChar;
         }
                             //change state according to recieved serial data
-    if(incomingdata == "w"){
+    if(incomingdata == "f"){
         bcmstate = 1;}
 
-    if(incomingdata == "s"){
+    if(incomingdata == "b"){
         bcmstate = 2;}
 
-    if(incomingdata == "a"){
+    if(incomingdata == "l"){
         bcmstate = 3;}
 
-    if(incomingdata == "d"){
+    if(incomingdata == "r"){
         bcmstate = 4;}
+
+    if(incomingdata == "h"){
+        halt();                 //Halt all functions of the BCM
+    }
+
     incomingdata = "";
 }
 
@@ -143,7 +151,6 @@ void left() {
 
 void headleft() {
     digitalWrite(S3_D, HIGH);
-
     digitalWrite(S3_S, HIGH);
     delayMicroseconds(speed);
     digitalWrite(S3_S, LOW);
@@ -155,4 +162,9 @@ void headright() {
     delayMicroseconds(speed);
     digitalWrite(S3_S, LOW);
     delayMicroseconds(speed);
+}
+
+void halt(){
+    bcmstate = 0;
+    //This will contain more later once there is more going on with servos/ect
 }

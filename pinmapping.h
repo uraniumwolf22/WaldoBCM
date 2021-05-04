@@ -1,7 +1,5 @@
 /*Holds all of the definitons that cause clutter in main code*/
 
-
-
 //Stepper motor pin mapping
 #define S1_S 7
 #define S1_D 6
