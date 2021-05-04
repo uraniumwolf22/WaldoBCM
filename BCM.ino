@@ -5,6 +5,8 @@
 #include "pinmapping.h"
 
 String incomingdata = "";
+String motorNumber
+String
 
 void setup(){
     //set up serial communication
@@ -41,10 +43,8 @@ void serialEvent(){             //check serial and get data
         char inChar = (char)Serial.read();
         incomingdata += inChar;
         }
-                            //change state according to recieved serial data
-    if(incomingdata == "f"){
-        bcmstate = 1;}
-
-
+        
+    
     incomingdata = "";
 }
+
