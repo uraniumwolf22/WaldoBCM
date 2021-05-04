@@ -2,35 +2,7 @@
 //Created with care by Logan Ross <3
 
 #include<Servo.h>
-
-//Stepper motor pin mapping
-#define S1_S 7
-#define S1_D 6
-#define S2_S 3
-#define S2_D 2
-#define S3_S 10
-#define S3_D 11
-#define S4_S 5
-#define S4_D 4
-#define S5_S 13
-#define S5_D 12
-#define S6_S 9
-#define S6_D 8
-//init servos
-Servo servo1;
-Servo servo2;
-Servo servo3;
-Servo servo4;
-Servo servo5;
-Servo servo6;
-//init servo positions
-int SPOS1 = 0;
-int SPOS2 = 0;
-int SPOS3 = 0;
-int SPOS4 = 0;
-int SPOS5 = 0;
-int SPOS6 = 0;
-
+#include "pinmapping.h"
 int globalspeed = 350 ;  //Set global stepper motor speed
 int speed = 0;  //stepper motor speed working value
 
@@ -74,23 +46,19 @@ using the calcspeed function */
 void loop(){
     if(bcmstate == 1){      
         calcspeed(1);
-        forward();
-    }
+        forward();}
 
     if(bcmstate == 2){
         calcspeed(1);
-        backward();
-    }
+        backward();}
 
     if(bcmstate == 3){
         calcspeed(1);
-        left();
-    }
+        left();}
 
     if(bcmstate == 4){
         calcspeed(1);
-        right();
-    }
+        right();}
 }
 //Detects if a serial event has taken place and changes the BCMstate accordingly
 void serialEvent(){             //check serial and get data
@@ -98,23 +66,18 @@ void serialEvent(){             //check serial and get data
         char inChar = (char)Serial.read();
         incomingdata += inChar;
         }
-    
                             //change state according to recieved serial data
     if(incomingdata == "w"){
-        bcmstate = 1;
-    }
+        bcmstate = 1;}
 
     if(incomingdata == "s"){
-        bcmstate = 2;
-    }
+        bcmstate = 2;}
 
     if(incomingdata == "a"){
-        bcmstate = 3;
-    }
+        bcmstate = 3;}
 
     if(incomingdata == "d"){
-        bcmstate = 4;
-    }
+        bcmstate = 4;}
     incomingdata = "";
 }
 
@@ -124,71 +87,3 @@ int calcspeed(int actions){         //calculate the timing needed to speed stepp
     return(0);
 }
 
-void forward(){
-    //Set motor directions
-    digitalWrite(S1_D,HIGH);
-    digitalWrite(S2_D,HIGH);
-    //step motors once
-    digitalWrite(S1_S,HIGH);
-    digitalWrite(S2_S,HIGH);
-    delayMicroseconds(speed);
-    digitalWrite(S1_S,LOW);
-    digitalWrite(S2_S,LOW);
-    delayMicroseconds(speed);
-}
-
-void backward(){
-    //Set motor directions
-    digitalWrite(S1_D,LOW);
-    digitalWrite(S2_D,LOW);
-    //step motors once
-    digitalWrite(S1_S,HIGH);
-    digitalWrite(S2_S,HIGH);
-    delayMicroseconds(speed);
-    digitalWrite(S1_S,LOW);
-    digitalWrite(S2_S,LOW);
-    delayMicroseconds(speed);
-}
-
-void right(){
-    //Set motor directions
-    digitalWrite(S1_D,HIGH);
-    digitalWrite(S2_D,LOW);
-    //step motors once
-    digitalWrite(S1_S,HIGH);
-    digitalWrite(S2_S,HIGH);
-    delayMicroseconds(speed);
-    digitalWrite(S1_S,LOW);
-    digitalWrite(S2_S,LOW);
-    delayMicroseconds(speed);
-}
-
-void left(){
-    //Set motor directions
-    digitalWrite(S1_D,LOW);
-    digitalWrite(S2_D,HIGH);
-    //step motors once
-    digitalWrite(S1_S,HIGH);
-    digitalWrite(S2_S,HIGH);
-    delayMicroseconds(speed);
-    digitalWrite(S1_S,LOW);
-    digitalWrite(S2_S,LOW);
-    delayMicroseconds(speed);
-}
-
-void headleft(){
-    digitalWrite(S3_D,HIGH);
-
-    digitalWrite(S3_S,HIGH);
-    delayMicroseconds(speed);
-    digitalWrite(S3_S,LOW);
-    delayMicroseconds(speed);
-}
-void headright(){
-    digitalWrite(S3_D,LOW);
-
-    digitalWrite(S3_S,HIGH);
-    delayMicroseconds(speed);
-    digitalWrite(S3_S,LOW);
-    delayMicroseconds(speed);
-}
