@@ -36,6 +36,8 @@ int speed = 0;  //stepper motor speed working value
 
 int bcmstate = 0;   //the current mode of the motors
 String incomingdata = "";
+String motorNumber
+String
 
 void setup(){
     //set up serial communication
@@ -97,7 +99,10 @@ void serialEvent(){             //check serial and get data
     while(Serial.available()){
         char inChar = (char)Serial.read();
         incomingdata += inChar;
-        }
+        }    
+    incomingdata = "";
+}
+
     
                             //change state according to recieved serial data
     if(incomingdata == "w"){
