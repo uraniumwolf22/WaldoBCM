@@ -7,7 +7,6 @@ int globalspeed = 350 ;  //Set global stepper motor speed
 int speed = 0;  //stepper motor speed working value
 
 int bcmstate = 0;   //the current mode of the motors
-int powerstate = 0;
 String incomingdata = "";
 
 void setup(){
@@ -45,7 +44,6 @@ than it would be if there was only 1 step so we calculate the true stepping spee
 using the calcspeed function */
 
 void loop(){
-    if(powerstate){
     if(bcmstate == 1){      
         calcspeed(1);
         forward();}
@@ -64,7 +62,6 @@ void loop(){
     }
     if(!powerstate){
         halt();
-    }
 }
 //Detects if a serial event has taken place and changes the BCMstate accordingly
 void serialEvent(){             //check serial and get data
@@ -89,9 +86,6 @@ void serialEvent(){             //check serial and get data
         halt();                 //Halt all functions of the BCM
     }
 
-    if(incomingdata == "i"){
-        powerstate = 1;
-    }
     incomingdata = "";
 }
 
