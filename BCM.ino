@@ -151,7 +151,6 @@ void headleft() {
 }
 void headright() {
     digitalWrite(S3_D, LOW);
-
     digitalWrite(S3_S, HIGH);
     delayMicroseconds(speed);
     digitalWrite(S3_S, LOW);
