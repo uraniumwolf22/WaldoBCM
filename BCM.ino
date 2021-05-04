@@ -1,6 +1,5 @@
 //Waldo Body Control Module serial control software
 //Created with care by Logan Ross <3
-//testing
 
 #include<Servo.h>
 
