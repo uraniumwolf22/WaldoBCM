@@ -87,3 +87,73 @@ int calcspeed(int actions){         //calculate the timing needed to speed stepp
     return(0);
 }
 
+// functions that were cluttering main file
+
+void forward() {
+    //Set motor directions
+    digitalWrite(S1_D, HIGH);
+    digitalWrite(S2_D, HIGH);
+    //step motors once
+    digitalWrite(S1_S, HIGH);
+    digitalWrite(S2_S, HIGH);
+    delayMicroseconds(speed);
+    digitalWrite(S1_S, LOW);
+    digitalWrite(S2_S, LOW);
+    delayMicroseconds(speed);
+}
+
+void backward() {
+    //Set motor directions
+    digitalWrite(S1_D, LOW);
+    digitalWrite(S2_D, LOW);
+    //step motors once
+    digitalWrite(S1_S, HIGH);
+    digitalWrite(S2_S, HIGH);
+    delayMicroseconds(speed);
+    digitalWrite(S1_S, LOW);
+    digitalWrite(S2_S, LOW);
+    delayMicroseconds(speed);
+}
+
+void right() {
+    //Set motor directions
+    digitalWrite(S1_D, HIGH);
+    digitalWrite(S2_D, LOW);
+    //step motors once
+    digitalWrite(S1_S, HIGH);
+    digitalWrite(S2_S, HIGH);
+    delayMicroseconds(speed);
+    digitalWrite(S1_S, LOW);
+    digitalWrite(S2_S, LOW);
+    delayMicroseconds(speed);
+}
+
+void left() {
+    //Set motor directions
+    digitalWrite(S1_D, LOW);
+    digitalWrite(S2_D, HIGH);
+    //step motors once
+    digitalWrite(S1_S, HIGH);
+    digitalWrite(S2_S, HIGH);
+    delayMicroseconds(speed);
+    digitalWrite(S1_S, LOW);
+    digitalWrite(S2_S, LOW);
+    delayMicroseconds(speed);
+}
+
+void headleft() {
+    digitalWrite(S3_D, HIGH);
+
+    digitalWrite(S3_S, HIGH);
+    delayMicroseconds(speed);
+    digitalWrite(S3_S, LOW);
+    delayMicroseconds(speed);
+}
+void headright() {
+    digitalWrite(S3_D, LOW);
+
+    digitalWrite(S3_S, HIGH);
+    delayMicroseconds(speed);
+    digitalWrite(S3_S, LOW);
+    delayMicroseconds(speed);
+}
