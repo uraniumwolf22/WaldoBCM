@@ -17,4 +17,3 @@ the direction you want to move followed by "t" to terminate the current serial c
 an example of this would be "ft"  to move forward for "bt"  to move backwards.
 
 the 5 current movement commands are f,b,l,r,h for forward back left right and halt.
-"it"  will disable the system from recieving BCM updates.
