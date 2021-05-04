@@ -47,7 +47,7 @@ void setup(){
     servo4.attach(A3);
     servo5.attach(A2);
     servo6.attach(A1);
-    delay(2000);
+    delay(500);
     Serial.println("Serial link established");
 }
 
