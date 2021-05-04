@@ -2,47 +2,32 @@
 //Created with care by Logan Ross <3
 
 #include<Servo.h>
+#include "pinmapping.h"
 
-//Stepper motor pin mapping
-#define S1_S 7
-#define S1_D 6
-#define S2_S 3
-#define S2_D 2
-#define S3_S 10
-#define S3_D 11
-#define S4_S 5
-#define S4_D 4
-#define S5_S 13
-#define S5_D 12
-#define S6_S 9
-#define S6_D 8
-//init servos
-Servo servo1;
-Servo servo2;
-Servo servo3;
-Servo servo4;
-Servo servo5;
-Servo servo6;
-//init servo positions
-int SPOS1 = 0;
-int SPOS2 = 0;
-int SPOS3 = 0;
-int SPOS4 = 0;
-int SPOS5 = 0;
-int SPOS6 = 0;
-
-int globalspeed = 350 ;  //Set global stepper motor speed
-int speed = 0;  //stepper motor speed working value
-
-int bcmstate = 0;   //the current mode of the motors
 String incomingdata = "";
-String motorNumber
-String
+
+String motorType = "";
+String motorNumber = "";
+String motorResolution = "";
+String motorDirection = "";
+
+bool stepToDo = false;
+int motorres = 0;
+
+int res;
+int motor;
+int dir;
 
 void setup(){
     //set up serial communication
-    incomingdata.reserve(200);
-    Serial.begin(9600);
+    incomingdata.reserve(100);
+    motorType.reserve(20);
+    motorNumber.reserve(20);
+    motorResolution.reserve(20);
+    motorDirection.reserve(20);
+
+
+    Serial.begin(115200);
     // set all the pin modes to output.
     pinMode(S1_S,OUTPUT);
     pinMode(S1_D,OUTPUT);
@@ -67,133 +52,178 @@ void setup(){
     Serial.println("Serial link established");
 }
 
-/*in the loop it is consistantly moving the motors one step in the right direction
-based on the bcmstate variable.  we recalculate the time of each step every time.
-this is because if we have a 3 move step the time for the step to take place is actually 3 times greater
-than it would be if there was only 1 step so we calculate the true stepping speed based on the global stepping speed
-using the calcspeed function */
-
-void loop(){
-    if(bcmstate == 1){      
-        calcspeed(1);
-        forward();
-    }
-
-    if(bcmstate == 2){
-        calcspeed(1);
-        backward();
-    }
-
-    if(bcmstate == 3){
-        calcspeed(1);
-        left();
-    }
-
-    if(bcmstate == 4){
-        calcspeed(1);
-        right();
-    }
-}
 //Detects if a serial event has taken place and changes the BCMstate accordingly
 void serialEvent(){             //check serial and get data
     while(Serial.available()){
         char inChar = (char)Serial.read();
         incomingdata += inChar;
-        }    
+        delayMicroseconds(100);
+        }
+
+        Serial.println(incomingdata);
+        motorType = incomingdata.substring(0,1);
+        motorNumber = incomingdata.substring(1,2);
+        motorResolution = incomingdata.substring(2,3);
+        motorDirection = incomingdata.substring(3,4);
     incomingdata = "";
+    stepToDo = true;
 }
 
-    
-                            //change state according to recieved serial data
-    if(incomingdata == "w"){
-        bcmstate = 1;
+void loop(){
+
+    if(stepToDo == true){
+        if (motorNumber == "A"){
+            motor = 1;
+        }
+        if (motorNumber == "B"){
+            motor = 2;
+        }
+        if (motorNumber == "C"){
+            motor = 3;
+        }
+        if (motorNumber == "D"){
+            motor = 4;
+        }
+        if (motorNumber == "E"){
+            motor = 5;
+        }
+        if (motorNumber == "F"){
+            motor = 6;
+        }
+        
+
+        if(motorResolution == "A"){
+            res = 1;
+        }
+        
+        if(motorResolution == "B"){
+            res = 5;
+        }
+        if(motorResolution == "C"){
+            res = 10;
+        }
+        if(motorResolution == "D"){
+            res = 100;
+        }
+
+
+        if(motorDirection == "F"){
+            dir = 1;
+        }
+        if(motorDirection == "B"){
+            dir = 0;
+        }
+
+    executestepcommand(res,motor,dir);
+    stepToDo = false;
+    }
+}
+
+int executestepcommand(int res, int motor, int dir){
+    Serial.println(motor);
+    Serial.println(res);
+    Serial.println(dir);
+
+    if(motor == 1){
+        for(int i = 0; i < res; i++){
+            if(dir == 1){
+                digitalWrite(S1_D,HIGH);
+                digitalWrite(S1_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S1_S,LOW);
+            }
+
+            if(dir == 0){
+                digitalWrite(S1_D,LOW);
+                digitalWrite(S1_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S1_S,LOW);
+            }
+        }
     }
 
-    if(incomingdata == "s"){
-        bcmstate = 2;
+    if(motor == 2){
+        for(int i = 0; i < res; i++){
+            if(dir == 1){
+                digitalWrite(S2_D,HIGH);
+                digitalWrite(S2_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S2_S,LOW);
+            }
+            if(dir == 0){
+                digitalWrite(S2_D,LOW);
+                digitalWrite(S2_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S2_S,LOW);
+            }
+        }
     }
 
-    if(incomingdata == "a"){
-        bcmstate = 3;
+    if(motor == 3){
+        for(int i = 0; i < res; i++){
+            if(dir == 1){
+                digitalWrite(S3_D,HIGH);
+                digitalWrite(S3_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S3_S,LOW);
+            }
+            if(dir == 0){
+                digitalWrite(S3_D,LOW);
+                digitalWrite(S3_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S3_S,LOW);
+            }
+        }
     }
 
-    if(incomingdata == "d"){
-        bcmstate = 4;
+    if(motor == 4){
+        for(int i = 0; i < res; i++){
+            if(dir == 1){
+                digitalWrite(S4_D,HIGH);
+                digitalWrite(S4_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S4_S,LOW);
+            }
+            if(dir == 0){
+                digitalWrite(S4_D,LOW);
+                digitalWrite(S4_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S4_S,LOW);
+            }
+        }
     }
-    incomingdata = "";
-}
 
+    if(motor == 5){
+        for(int i = 0; i < res; i++){
+            if(dir == 1){
+                digitalWrite(S5_D,HIGH);
+                digitalWrite(S5_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S5_S,LOW);
+            }
+            if(dir == 0){
+                digitalWrite(S5_D,LOW);
+                digitalWrite(S5_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S5_S,LOW);
+            }
+        }
+    }
 
-int calcspeed(int actions){         //calculate the timing needed to speed stepper motors based on global speed and number of actions at once
-    speed = globalspeed / actions;
-    return(0);
-}
-
-void forward(){
-    //Set motor directions
-    digitalWrite(S1_D,HIGH);
-    digitalWrite(S2_D,HIGH);
-    //step motors once
-    digitalWrite(S1_S,HIGH);
-    digitalWrite(S2_S,HIGH);
-    delayMicroseconds(speed);
-    digitalWrite(S1_S,LOW);
-    digitalWrite(S2_S,LOW);
-    delayMicroseconds(speed);
-}
-
-void backward(){
-    //Set motor directions
-    digitalWrite(S1_D,LOW);
-    digitalWrite(S2_D,LOW);
-    //step motors once
-    digitalWrite(S1_S,HIGH);
-    digitalWrite(S2_S,HIGH);
-    delayMicroseconds(speed);
-    digitalWrite(S1_S,LOW);
-    digitalWrite(S2_S,LOW);
-    delayMicroseconds(speed);
-}
-
-void right(){
-    //Set motor directions
-    digitalWrite(S1_D,HIGH);
-    digitalWrite(S2_D,LOW);
-    //step motors once
-    digitalWrite(S1_S,HIGH);
-    digitalWrite(S2_S,HIGH);
-    delayMicroseconds(speed);
-    digitalWrite(S1_S,LOW);
-    digitalWrite(S2_S,LOW);
-    delayMicroseconds(speed);
-}
-
-void left(){
-    //Set motor directions
-    digitalWrite(S1_D,LOW);
-    digitalWrite(S2_D,HIGH);
-    //step motors once
-    digitalWrite(S1_S,HIGH);
-    digitalWrite(S2_S,HIGH);
-    delayMicroseconds(speed);
-    digitalWrite(S1_S,LOW);
-    digitalWrite(S2_S,LOW);
-    delayMicroseconds(speed);
-}
-
-void headleft(){
-    digitalWrite(S3_D,HIGH);
-
-    digitalWrite(S3_S,HIGH);
-    delayMicroseconds(speed);
-    digitalWrite(S3_S,LOW);
-    delayMicroseconds(speed);
-}
-void headright(){
-    digitalWrite(S3_D,LOW);
-
-    digitalWrite(S3_S,HIGH);
-    delayMicroseconds(speed);
-    digitalWrite(S3_S,LOW);
-    delayMicroseconds(speed);
+    if(motor == 6){
+        for(int i = 0; i < res; i++){
+            if(dir == 1){
+                digitalWrite(S6_D,HIGH);
+                digitalWrite(S6_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S6_S,LOW);
+            }
+            if(dir == 0){
+                digitalWrite(S6_D,LOW);
+                digitalWrite(S6_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S6_S,LOW);
+            }
+        }
+    }
 }
