@@ -13,7 +13,7 @@ String incomingdata = "";
 void setup(){
     //set up serial communication
     incomingdata.reserve(200);
-    Serial.begin(9600);
+    Serial.begin(115200);
     // set all the pin modes to output.
     pinMode(S1_S,OUTPUT);
     pinMode(S1_D,OUTPUT);
@@ -86,7 +86,7 @@ void serialEvent(){             //check serial and get data
         bcmstate = 4;}
 
     if(incomingdata == "h"){
-        halt();
+        halt();                 //Halt all functions of the BCM
     }
 
     if(incomingdata == "i"){
@@ -157,7 +157,6 @@ void left() {
 
 void headleft() {
     digitalWrite(S3_D, HIGH);
-
     digitalWrite(S3_S, HIGH);
     delayMicroseconds(speed);
     digitalWrite(S3_S, LOW);
