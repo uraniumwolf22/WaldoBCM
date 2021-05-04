@@ -59,7 +59,7 @@ void serialEvent(){             //check serial and get data
         incomingdata += inChar;
         delayMicroseconds(100);
         }
-        
+
         Serial.println(incomingdata);
         motorType = incomingdata.substring(0,1);
         motorNumber = incomingdata.substring(1,2);
@@ -132,6 +132,7 @@ int executestepcommand(int res, int motor, int dir){
                 delayMicroseconds(500);
                 digitalWrite(S1_S,LOW);
             }
+
             if(dir == 0){
                 digitalWrite(S1_D,LOW);
                 digitalWrite(S1_S,HIGH);
@@ -139,8 +140,9 @@ int executestepcommand(int res, int motor, int dir){
                 digitalWrite(S1_S,LOW);
             }
         }
+    }
 
-
+    if(motor == 2){
         for(int i = 0; i < res; i++){
             if(dir == 1){
                 digitalWrite(S2_D,HIGH);
@@ -155,7 +157,9 @@ int executestepcommand(int res, int motor, int dir){
                 digitalWrite(S2_S,LOW);
             }
         }
+    }
 
+    if(motor == 3){
         for(int i = 0; i < res; i++){
             if(dir == 1){
                 digitalWrite(S3_D,HIGH);
@@ -170,7 +174,9 @@ int executestepcommand(int res, int motor, int dir){
                 digitalWrite(S3_S,LOW);
             }
         }
+    }
 
+    if(motor == 4){
         for(int i = 0; i < res; i++){
             if(dir == 1){
                 digitalWrite(S4_D,HIGH);
@@ -185,7 +191,9 @@ int executestepcommand(int res, int motor, int dir){
                 digitalWrite(S4_S,LOW);
             }
         }
+    }
 
+    if(motor == 5){
         for(int i = 0; i < res; i++){
             if(dir == 1){
                 digitalWrite(S5_D,HIGH);
@@ -200,7 +208,9 @@ int executestepcommand(int res, int motor, int dir){
                 digitalWrite(S5_S,LOW);
             }
         }
+    }
 
+    if(motor == 6){
         for(int i = 0; i < res; i++){
             if(dir == 1){
                 digitalWrite(S6_D,HIGH);
