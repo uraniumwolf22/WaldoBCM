@@ -5,13 +5,24 @@
 #include "pinmapping.h"
 
 String incomingdata = "";
-String motorNumber
-String
+
+String motorType = "";
+String motorNumber = "";
+String motorResolution = "";
+String motorDirection = "";
+
+int motorres = 0;
 
 void setup(){
     //set up serial communication
-    incomingdata.reserve(200);
-    Serial.begin(115200);
+    incomingdata.reserve(100);
+    motorType.reserve(20);
+    motorNumber.reserve(20);
+    motorResolution.reserve(20);
+    motorDirection.reserve(20);
+
+
+    Serial.begin(9600);
     // set all the pin modes to output.
     pinMode(S1_S,OUTPUT);
     pinMode(S1_D,OUTPUT);
@@ -36,6 +47,11 @@ void setup(){
     Serial.println("Serial link established");
 }
 void loop(){
+    delay(1000);
+    Serial.println(motorType);
+    Serial.println(motorNumber);
+    Serial.println(motorResolution);
+    Serial.println(motorDirection);
 }
 //Detects if a serial event has taken place and changes the BCMstate accordingly
 void serialEvent(){             //check serial and get data
@@ -43,8 +59,11 @@ void serialEvent(){             //check serial and get data
         char inChar = (char)Serial.read();
         incomingdata += inChar;
         }
-        
-    
+        motorType = incomingdata.substring(0,1);
+        motorNumber = incomingdata.substring(1,2);
+        motorResolution = incomingdata.substring(2,3);
+        motorDirection = incomingdata.substring(3,4);
+
     incomingdata = "";
 }
 
