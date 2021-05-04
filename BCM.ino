@@ -78,6 +78,10 @@ void serialEvent(){             //check serial and get data
 
     if(incomingdata == "r"){
         bcmstate = 4;}
+
+    if(incomingdata == "h"){
+        halt();
+    }
     incomingdata = "";
 }
 
@@ -155,4 +159,9 @@ void headright() {
     delayMicroseconds(speed);
     digitalWrite(S3_S, LOW);
     delayMicroseconds(speed);
+}
+
+void halt(){
+    bcmstate = 0;
+    //This will contain more later once there is more going on with servos/ect
 }

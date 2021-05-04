@@ -15,4 +15,4 @@ the movement mapping for the arduino is as follows:
 the direction you want to move followed by "t" to terminate the current serial command
 an example of this would be "ft"  to move forward for "bt"  to move backwards.
 
-the 4 current movement commands are f,b,l,r for forward back left and right.
+the 5 current movement commands are f,b,l,r,h for forward back left right and halt.
