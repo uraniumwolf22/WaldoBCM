@@ -11,7 +11,12 @@ String motorNumber = "";
 String motorResolution = "";
 String motorDirection = "";
 
+bool stepToDo = false;
 int motorres = 0;
+
+int res;
+int motor;
+int dir;
 
 void setup(){
     //set up serial communication
@@ -22,7 +27,7 @@ void setup(){
     motorDirection.reserve(20);
 
 
-    Serial.begin(9600);
+    Serial.begin(115200);
     // set all the pin modes to output.
     pinMode(S1_S,OUTPUT);
     pinMode(S1_D,OUTPUT);
@@ -46,24 +51,169 @@ void setup(){
     delay(2000);
     Serial.println("Serial link established");
 }
-void loop(){
-    delay(1000);
-    Serial.println(motorType);
-    Serial.println(motorNumber);
-    Serial.println(motorResolution);
-    Serial.println(motorDirection);
-}
+
 //Detects if a serial event has taken place and changes the BCMstate accordingly
 void serialEvent(){             //check serial and get data
     while(Serial.available()){
         char inChar = (char)Serial.read();
         incomingdata += inChar;
+        delayMicroseconds(100);
         }
+        
+        Serial.println(incomingdata);
         motorType = incomingdata.substring(0,1);
         motorNumber = incomingdata.substring(1,2);
         motorResolution = incomingdata.substring(2,3);
         motorDirection = incomingdata.substring(3,4);
-
     incomingdata = "";
+    stepToDo = true;
 }
 
+void loop(){
+
+    if(stepToDo == true){
+        if (motorNumber == "A"){
+            motor = 1;
+        }
+        if (motorNumber == "B"){
+            motor = 2;
+        }
+        if (motorNumber == "C"){
+            motor = 3;
+        }
+        if (motorNumber == "D"){
+            motor = 4;
+        }
+        if (motorNumber == "E"){
+            motor = 5;
+        }
+        if (motorNumber == "F"){
+            motor = 6;
+        }
+        
+
+        if(motorResolution == "A"){
+            res = 1;
+        }
+        
+        if(motorResolution == "B"){
+            res = 5;
+        }
+        if(motorResolution == "C"){
+            res = 10;
+        }
+        if(motorResolution == "D"){
+            res = 100;
+        }
+
+
+        if(motorDirection == "F"){
+            dir = 1;
+        }
+        if(motorDirection == "B"){
+            dir = 0;
+        }
+
+    executestepcommand(res,motor,dir);
+    stepToDo = false;
+    }
+}
+
+int executestepcommand(int res, int motor, int dir){
+    Serial.println(motor);
+    Serial.println(res);
+    Serial.println(dir);
+
+    if(motor == 1){
+        for(int i = 0; i < res; i++){
+            if(dir == 1){
+                digitalWrite(S1_D,HIGH);
+                digitalWrite(S1_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S1_S,LOW);
+            }
+            if(dir == 0){
+                digitalWrite(S1_D,LOW);
+                digitalWrite(S1_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S1_S,LOW);
+            }
+        }
+
+
+        for(int i = 0; i < res; i++){
+            if(dir == 1){
+                digitalWrite(S2_D,HIGH);
+                digitalWrite(S2_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S2_S,LOW);
+            }
+            if(dir == 0){
+                digitalWrite(S2_D,LOW);
+                digitalWrite(S2_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S2_S,LOW);
+            }
+        }
+
+        for(int i = 0; i < res; i++){
+            if(dir == 1){
+                digitalWrite(S3_D,HIGH);
+                digitalWrite(S3_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S3_S,LOW);
+            }
+            if(dir == 0){
+                digitalWrite(S3_D,LOW);
+                digitalWrite(S3_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S3_S,LOW);
+            }
+        }
+
+        for(int i = 0; i < res; i++){
+            if(dir == 1){
+                digitalWrite(S4_D,HIGH);
+                digitalWrite(S4_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S4_S,LOW);
+            }
+            if(dir == 0){
+                digitalWrite(S4_D,LOW);
+                digitalWrite(S4_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S4_S,LOW);
+            }
+        }
+
+        for(int i = 0; i < res; i++){
+            if(dir == 1){
+                digitalWrite(S5_D,HIGH);
+                digitalWrite(S5_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S5_S,LOW);
+            }
+            if(dir == 0){
+                digitalWrite(S5_D,LOW);
+                digitalWrite(S5_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S5_S,LOW);
+            }
+        }
+
+        for(int i = 0; i < res; i++){
+            if(dir == 1){
+                digitalWrite(S6_D,HIGH);
+                digitalWrite(S6_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S6_S,LOW);
+            }
+            if(dir == 0){
+                digitalWrite(S6_D,LOW);
+                digitalWrite(S6_S,HIGH);
+                delayMicroseconds(500);
+                digitalWrite(S6_S,LOW);
+            }
+        }
+    }
+}
