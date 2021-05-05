@@ -23,5 +23,5 @@ S A A F
 
 4 `MOTOR DIRECTION`: Defines which direction the motors should be moving.  F for forward and B for Backwards.
 
-
+Note: BCM Will send the character X when the move has been completed across serial.
 :trollface: 🍆
