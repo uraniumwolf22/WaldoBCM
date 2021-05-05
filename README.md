@@ -5,6 +5,7 @@
 
 Required python packages:
 -Pyserial
+-PySimpleGUI
 
 open the serial port only once.  every time it opens something in my C code makes all the stepper motors
 freak out.  still working on that issue but for now we need to open the serial port and keep it open.
