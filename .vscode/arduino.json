@@ -1,6 +1,6 @@
 {
     "configuration": "cpu=atmega328",
     "board": "arduino:avr:nano",
-    "sketch": "BCM.ino",
+    "sketch": "BCM_Hardware\\BCM.ino",
     "port": "COM5"
 }

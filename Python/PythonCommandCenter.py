@@ -5,10 +5,8 @@ import serial
 # import io
 
 themesetup()
-
+port = serial.Serial('COM5', baudrate=115200)
 # Port Connection #
-
-port = serial.Serial('COM3', baudrate=9600)
 port.write_timeout = 0.1
 port.read_timeout = 0.1
 print(f'Port opened at {port.name}')
@@ -55,6 +53,7 @@ while True:
     if event == 'B':
         try: port.write(f'SA{step}B'.encode())
         except serial.serialutil.SerialTimeoutException: pass
+
 
     # port.read()
     # port.read_until('X'.encode())  # to be implemented on review
