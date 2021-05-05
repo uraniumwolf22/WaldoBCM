@@ -114,7 +114,7 @@ void loop(){
         }
 
         executestepcommand(res,motor,dir);
-        Serial.print("X")
+        Serial.print("X");
         stepToDo = false;
     }
 }
