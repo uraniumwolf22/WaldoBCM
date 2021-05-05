@@ -38,6 +38,12 @@ window = sg.Window('BMC Controller', layout)
 
 # Main Loop #
 
+def motorMove(pos, dir, type='S', step='A'):
+    try:
+        port.write(type+pos+step+dir.encode())
+        port.read_until('X'.encode())
+    except serial.serialutil.SerialTimeoutException: print('Timed out!')
+
 while True:
     event, values = window.Read(timeout=100, timeout_key='')
 
@@ -48,13 +54,6 @@ while True:
     if event != '': print(event)
     step = 'A' if values[0] else 'B' if values[1] else 'C'
 
-    if event == 'F':
-        try: port.write(f'SA{step}F'.encode())
-        except serial.serialutil.SerialTimeoutException: pass
+    if event == 'F': motorMove('A', 'F')
 
-    if event == 'B':
-        try: port.write(f'SA{step}B'.encode())
-        except serial.serialutil.SerialTimeoutException: pass
-
-    port.read_until('X'.encode())  # to be implemented on review
-    # sleep(0.05)
+    if event == 'B': motorMove('A', 'F')
