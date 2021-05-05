@@ -113,8 +113,9 @@ void loop(){
             dir = 0;
         }
 
-    executestepcommand(res,motor,dir);
-    stepToDo = false;
+        executestepcommand(res,motor,dir);
+
+        stepToDo = false;
     }
 }
 
