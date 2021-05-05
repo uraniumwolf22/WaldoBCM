@@ -15,7 +15,7 @@ bool stepToDo = false;
 int res;
 int motor;
 int dir;
-int speed = 1000;
+int speed = 500;
 
 void setup(){
     //set up serial communication
@@ -131,6 +131,7 @@ int executestepcommand(int res, int motor, int dir){
                 digitalWrite(S1_S,HIGH);
                 delayMicroseconds(speed);
                 digitalWrite(S1_S,LOW);
+                delayMicroseconds(speed);
             }
 
             if(dir == 0){
@@ -138,6 +139,7 @@ int executestepcommand(int res, int motor, int dir){
                 digitalWrite(S1_S,HIGH);
                 delayMicroseconds(speed);
                 digitalWrite(S1_S,LOW);
+                delayMicroseconds(speed);
             }
         }
     }
@@ -149,12 +151,14 @@ int executestepcommand(int res, int motor, int dir){
                 digitalWrite(S2_S,HIGH);
                 delayMicroseconds(speed);
                 digitalWrite(S2_S,LOW);
+                delayMicroseconds(speed);
             }
             if(dir == 0){
                 digitalWrite(S2_D,LOW);
                 digitalWrite(S2_S,HIGH);
                 delayMicroseconds(speed);
                 digitalWrite(S2_S,LOW);
+                delayMicroseconds(speed);
             }
         }
     }
@@ -166,12 +170,14 @@ int executestepcommand(int res, int motor, int dir){
                 digitalWrite(S3_S,HIGH);
                 delayMicroseconds(speed);
                 digitalWrite(S3_S,LOW);
+                delayMicroseconds(speed);
             }
             if(dir == 0){
                 digitalWrite(S3_D,LOW);
                 digitalWrite(S3_S,HIGH);
                 delayMicroseconds(speed);
                 digitalWrite(S3_S,LOW);
+                delayMicroseconds(speed);
             }
         }
     }
@@ -183,12 +189,14 @@ int executestepcommand(int res, int motor, int dir){
                 digitalWrite(S4_S,HIGH);
                 delayMicroseconds(speed);
                 digitalWrite(S4_S,LOW);
+                delayMicroseconds(speed);
             }
             if(dir == 0){
                 digitalWrite(S4_D,LOW);
                 digitalWrite(S4_S,HIGH);
                 delayMicroseconds(speed);
                 digitalWrite(S4_S,LOW);
+                delayMicroseconds(speed);
             }
         }
     }
@@ -200,12 +208,14 @@ int executestepcommand(int res, int motor, int dir){
                 digitalWrite(S5_S,HIGH);
                 delayMicroseconds(speed);
                 digitalWrite(S5_S,LOW);
+                delayMicroseconds(speed);
             }
             if(dir == 0){
                 digitalWrite(S5_D,LOW);
                 digitalWrite(S5_S,HIGH);
                 delayMicroseconds(speed);
                 digitalWrite(S5_S,LOW);
+                delayMicroseconds(speed);
             }
         }
     }
@@ -217,12 +227,14 @@ int executestepcommand(int res, int motor, int dir){
                 digitalWrite(S6_S,HIGH);
                 delayMicroseconds(speed);
                 digitalWrite(S6_S,LOW);
+                delayMicroseconds(speed);
             }
             if(dir == 0){
                 digitalWrite(S6_D,LOW);
                 digitalWrite(S6_S,HIGH);
                 delayMicroseconds(speed);
                 digitalWrite(S6_S,LOW);
+                delayMicroseconds(speed);
             }
         }
     }

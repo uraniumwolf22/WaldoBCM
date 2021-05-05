@@ -38,4 +38,4 @@ while True:
         try: port.write('SAAB'.encode())
         except serial.serialutil.SerialTimeoutException: pass
 
-    sleep(0.05)
+    sleep(0.01)
