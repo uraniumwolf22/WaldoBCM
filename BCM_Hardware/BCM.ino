@@ -15,7 +15,7 @@ bool stepToDo = false;
 int res;
 int motor;
 int dir;
-int speed = 500;
+int speed = 1000;
 
 void setup(){
     //set up serial communication
