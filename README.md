@@ -4,21 +4,24 @@
 
 Required python packages:
 
-
 -Pyserial
 -PySimpleGUI
 
-open the serial port only once.  every time it opens something in my C code makes all the stepper motors
-freak out.  still working on that issue but for now we need to open the serial port and keep it open.
-Also remember whenever there is not a command not being sent to the BCM over serial all steppers have automatic holding torque
-
-# C CLIENT
 
 
-the movement mapping for the arduino is as follows:
-the direction you want to move followed by "t" to terminate the current serial command
-an example of this would be "ft"  to move forward for "bt"  to move backwards.
+# BCM Firmware
+
+Movement commands are as follows.
+
+S A A F
+
+1 __MOTOR TYPE__: Defines the type of motor,  __S__ for Stepper or __V__ for Servo.
+
+2 __MOTOR NUMBER__: Defines which motor to control, A-F coorospond to different motors on the BCM.
+
+3 __MOTOR RESOLUTION__: Defines the motor resolution.  Only applies to steppers and can be A - D or 1,5,10,100 steps.
+
+4 __MOTOR DIRECTION__: Defines which direction the motors should be moving.  F for forward and B for Backwards.
 
 
-the 5 current movement commands are f,b,l,r,h for forward back left right and halt.
 
