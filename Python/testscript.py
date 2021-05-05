@@ -1,8 +1,8 @@
 import serial
 
-port = serial.Serial('COM3', baudrate=9600)
+port = serial.Serial('COM5', baudrate=115200)
 port.read_timeout = 1
 
-port.write('SAAF'.encode())
+port.write('SADF'.encode())
 response = port.read_until('X'.encode())
 print(response)
