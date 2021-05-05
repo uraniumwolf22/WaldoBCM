@@ -47,8 +47,6 @@ void setup(){
     servo4.attach(A3);
     servo5.attach(A2);
     servo6.attach(A1);
-    delay(500);
-    Serial.println("Serial link established");
 }
 
 //Detects if a serial event has taken place and changes the BCMstate accordingly
@@ -59,7 +57,6 @@ void serialEvent(){             //check serial and get data
         delayMicroseconds(100);
         }
 
-        Serial.println(incomingdata);
         motorType = incomingdata.substring(0,1);
         motorNumber = incomingdata.substring(1,2);
         motorResolution = incomingdata.substring(2,3);
@@ -120,9 +117,6 @@ void loop(){
 }
 
 int executestepcommand(int res, int motor, int dir){
-    Serial.println(motor);
-    Serial.println(res);
-    Serial.println(dir);
 
     if(motor == 1){
         for(int i = 0; i < res; i++){
