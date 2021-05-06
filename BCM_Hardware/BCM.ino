@@ -4,7 +4,7 @@
 #include<Servo.h>
 #include "pinmapping.h"
 int speed = 500;
-int speedoffset = 0;
+long speedoffset = 0;
 
 String motornum;
 String motordir;
@@ -91,14 +91,15 @@ void loop(){
 }
 
 int calcspeed(){
-    int requestedspeed = motortime.toInt();
+    long requestedspeed = motortime.toInt();
     int realspeed;
     int compdelta;
     int reqtime;
     Serial.println(requestedspeed);
     Serial.println(steps_);
     Serial.println(speed);
-    speedoffset = (requestedspeed - (steps_ * ((speed * 2)/1000))) / 1000;
+    speedoffset = ((requestedspeed - (steps_ * ((speed * 2)/1000)))/steps_)*1000;
+
     Serial.println(speedoffset);
     if(speedoffset < 0){
         speedoffset = 0;
