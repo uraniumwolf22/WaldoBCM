@@ -16,8 +16,19 @@ int res;
 int motor;
 int dir;
 int speed = 500;
+int starttime;
+int endtime;
+int timetook;
+//debug vars
+
+int init_time;
+int serial_time;
+int loop_time
+int serialsendtime
+int executetime
 
 void setup(){
+    startupdate();
     //set up serial communication
     incomingdata.reserve(100);
     motorType.reserve(20);
@@ -47,12 +58,26 @@ void setup(){
     servo4.attach(A3);
     servo5.attach(A2);
     servo6.attach(A1);
-    delay(500);
     Serial.println("Serial link established");
+    endupdate();
+    init_time = calctime();
+    
+}
+
+int calctime(){
+    return endtime - starttime;
+}
+
+int startupdate(){
+    starttime = millis();
+}
+int endupdate(){
+    endtime = millis();
 }
 
 //Detects if a serial event has taken place and changes the BCMstate accordingly
 void serialEvent(){             //check serial and get data
+    startupdate();
     while(Serial.available()){
         char inChar = (char)Serial.read();
         incomingdata += inChar;
@@ -66,11 +91,14 @@ void serialEvent(){             //check serial and get data
         motorDirection = incomingdata.substring(3,4);
     incomingdata = "";
     stepToDo = true;
+    endupdate();
+    serial_time = calctime();
 }
 
 void loop(){
 
     if(stepToDo == true){
+        startupdate();
         if (motorNumber == "A"){
             motor = 1;
         }
@@ -112,18 +140,32 @@ void loop(){
         if(motorDirection == "B"){
             dir = 0;
         }
+        endupdate();
+        loop_time = calctime();
 
+        startupdate();
         executestepcommand(res,motor,dir);
         Serial.print("X");
         stepToDo = false;
+        endupdate();
+        serialsendtime = calctime();
+
+        Serial.println('time for init:');
+        Serial.println(init_time);
+        Serial.println('Time to check and recieve serial:');
+        Serial.println(serial_time);
+        Serial.println('Time for loop to execute:');
+        Serial.println(loop_time);
+        Serial.println('time to send serial:');
+        Serial.println(serialsendtime);
+        Serial.println('time to execute:');
+        Serial.println(executetime)
+
     }
 }
 
 int executestepcommand(int res, int motor, int dir){
-    Serial.println(motor);
-    Serial.println(res);
-    Serial.println(dir);
-
+    startupdate();
     if(motor == 1){
         for(int i = 0; i < res; i++){
             if(dir == 1){
@@ -238,4 +280,6 @@ int executestepcommand(int res, int motor, int dir){
             }
         }
     }
+    endupdate();
+    executetime = calctime();
 }
