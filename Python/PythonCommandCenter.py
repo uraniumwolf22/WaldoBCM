@@ -1,12 +1,14 @@
 import PySimpleGUI as sg
 from theme import themesetup
-from time import sleep
+# from time import sleep
 import serial
 # import io
 
 themesetup()
-port = serial.Serial('COM5', baudrate=115200)
+
 # Port Connection #
+
+port = serial.Serial('COM5', baudrate=115200)
 port.write_timeout = 0.1
 port.read_timeout = 0.1
 print(f'Port opened at {port.name}')
@@ -29,12 +31,18 @@ dirbuttons = [
 layout = [
           [sg.Column(leftcol, vertical_alignment='bottom'),
            sg.Column(dirbuttons, element_justification='center'),
-           sg.Column([[sg.Output(s=(10,10), echo_stdout_stderr = True)]])]
+           sg.Column([[sg.Output(s=(10,10), echo_stdout_stderr=True)]])]
 ]
 
 window = sg.Window('BMC Controller', layout)
 
 # Main Loop #
+
+def motorMove(pos, dir, type='S', step='A'):
+    try:
+        port.write((type+pos+step+dir).encode())
+        port.read_until('X'.encode())
+    except serial.serialutil.SerialTimeoutException: print('Timed out!')
 
 while True:
     event, values = window.Read(timeout=100, timeout_key='')
@@ -44,17 +52,7 @@ while True:
         break
 
     if event != '': print(event)
-    step = 'A' if values[0] == True else 'B' if values[1] == True else 'C'
+    step = 'A' if values[0] else 'B' if values[1] else 'C'
 
-    if event == 'F':
-        try: port.write(f'SA{step}F'.encode())
-        except serial.serialutil.SerialTimeoutException: pass
-
-    if event == 'B':
-        try: port.write(f'SA{step}B'.encode())
-        except serial.serialutil.SerialTimeoutException: pass
-
-
-    # port.read()
-    # port.read_until('X'.encode())  # to be implemented on review
-    sleep(0.05)
+    if event == 'F': motorMove('A', 'F', step=step)
+    if event == 'B': motorMove('A', 'B', step=step)

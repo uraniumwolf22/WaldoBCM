@@ -1,6 +1,8 @@
 import serial
-
-port = serial.Serial('COM3', baudrate=9600)
+import time
+port = serial.Serial('COM5', baudrate=115200)
+time.sleep(3)
 
 port.write('SAAF'.encode())
-print(port.read())
+port.read_until('X'.encode())
+print("IT FRIKKEN WORKED")
