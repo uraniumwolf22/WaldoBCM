@@ -98,7 +98,7 @@ int calcspeed(){
     Serial.println(requestedspeed);
     Serial.println(steps_);
     Serial.println(speed);
-    speedoffset = ((requestedspeed - (steps_ * ((speed * 2)/1000)))/steps_)*1000;
+    speedoffset = ((requestedspeed - (steps_ * ((speed * 2)/1000)))/steps_);
 
     Serial.println(speedoffset);
     if(speedoffset < 0){
@@ -145,7 +145,7 @@ int executestepcommand(int res, int motor, int dir){
                 delayMicroseconds(speed);
                 digitalWrite(S1_S,LOW);
                 delayMicroseconds(speed);
-                delayMicroseconds(speedoffset);
+                delay(speedoffset);
             }
 
             if(dir == 0){
@@ -154,7 +154,7 @@ int executestepcommand(int res, int motor, int dir){
                 delayMicroseconds(speed);
                 digitalWrite(S1_S,LOW);
                 delayMicroseconds(speed);
-                delayMicroseconds(speedoffset);
+                delay(speedoffset);
             }
         }
     }
@@ -167,7 +167,7 @@ int executestepcommand(int res, int motor, int dir){
                 delayMicroseconds(speed);
                 digitalWrite(S2_S,LOW);
                 delayMicroseconds(speed);
-                delayMicroseconds(speedoffset);
+                delay(speedoffset);
             }
             if(dir == 0){
                 digitalWrite(S2_D,LOW);
@@ -175,7 +175,7 @@ int executestepcommand(int res, int motor, int dir){
                 delayMicroseconds(speed);
                 digitalWrite(S2_S,LOW);
                 delayMicroseconds(speed);
-                delayMicroseconds(speedoffset);
+                delay(speedoffset);
             }
         }
     }
@@ -188,7 +188,7 @@ int executestepcommand(int res, int motor, int dir){
                 delayMicroseconds(speed);
                 digitalWrite(S3_S,LOW);
                 delayMicroseconds(speed);
-                delayMicroseconds(speedoffset);
+                delay(speedoffset);
             }
             if(dir == 0){
                 digitalWrite(S3_D,LOW);
@@ -196,7 +196,7 @@ int executestepcommand(int res, int motor, int dir){
                 delayMicroseconds(speed);
                 digitalWrite(S3_S,LOW);
                 delayMicroseconds(speed);
-                delayMicroseconds(speedoffset);
+                delay(speedoffset);
             }
         }
     }
@@ -209,7 +209,7 @@ int executestepcommand(int res, int motor, int dir){
                 delayMicroseconds(speed);
                 digitalWrite(S4_S,LOW);
                 delayMicroseconds(speed);
-                delayMicroseconds(speedoffset);
+                delay(speedoffset);
             }
             if(dir == 0){
                 digitalWrite(S4_D,LOW);
@@ -217,7 +217,7 @@ int executestepcommand(int res, int motor, int dir){
                 delayMicroseconds(speed);
                 digitalWrite(S4_S,LOW);
                 delayMicroseconds(speed);
-                delayMicroseconds(speedoffset);
+                delay(speedoffset);
             }
         }
     }
@@ -230,7 +230,7 @@ int executestepcommand(int res, int motor, int dir){
                 delayMicroseconds(speed);
                 digitalWrite(S5_S,LOW);
                 delayMicroseconds(speed);
-                delayMicroseconds(speedoffset);
+                delay(speedoffset);
             }
             if(dir == 0){
                 digitalWrite(S5_D,LOW);
@@ -238,7 +238,7 @@ int executestepcommand(int res, int motor, int dir){
                 delayMicroseconds(speed);
                 digitalWrite(S5_S,LOW);
                 delayMicroseconds(speed);
-                delayMicroseconds(speedoffset);
+                delay(speedoffset);
             }
         }
     }
@@ -251,7 +251,7 @@ int executestepcommand(int res, int motor, int dir){
                 delayMicroseconds(speed);
                 digitalWrite(S6_S,LOW);
                 delayMicroseconds(speed);
-                delayMicroseconds(speedoffset);
+                delay(speedoffset);
             }
             if(dir == 0){
                 digitalWrite(S6_D,LOW);
@@ -259,7 +259,7 @@ int executestepcommand(int res, int motor, int dir){
                 delayMicroseconds(speed);
                 digitalWrite(S6_S,LOW);
                 delayMicroseconds(speed);
-                delayMicroseconds(speedoffset);
+                delay(speedoffset);
             }
         }
     }
