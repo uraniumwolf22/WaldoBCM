@@ -84,7 +84,6 @@ void serialEvent(){             //check serial and get data
         delayMicroseconds(100);
         }
 
-        Serial.println(incomingdata);
         motorType = incomingdata.substring(0,1);
         motorNumber = incomingdata.substring(1,2);
         motorResolution = incomingdata.substring(2,3);
