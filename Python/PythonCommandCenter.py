@@ -40,8 +40,7 @@ window = sg.Window('BMC Controller', layout)
 
 def motorMove(pos, dir, type='S', step='A'):
     try:
-        command = type+pos+step+dir
-        port.write(command.encode())
+        port.write((type+pos+step+dir).encode())
         port.read_until('X'.encode())
     except serial.serialutil.SerialTimeoutException: print('Timed out!')
 
@@ -55,6 +54,5 @@ while True:
     if event != '': print(event)
     step = 'A' if values[0] else 'B' if values[1] else 'C'
 
-    if event == 'F': motorMove('A', 'F')
-
-    if event == 'B': motorMove('A', 'F')
+    if event == 'F': motorMove('A', 'F', step=step)
+    if event == 'B': motorMove('A', 'B', step=step)
