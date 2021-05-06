@@ -98,12 +98,8 @@ int calcspeed(){
     Serial.println(requestedspeed);
     Serial.println(steps_);
     Serial.println(speed);
-    realspeed = speed * 2 / 1000;
-    compdelta = steps_ * realspeed;
-    reqtime = (requestedspeed - compdelta);
-    speedoffset = ((reqtime / 100) * 1000) - compdelta;
+    speedoffset = (requestedspeed - (steps_ * ((speed * 2)/1000))) / 1000;
     Serial.println(speedoffset);
-    // speedoffset = ((requestedspeed - (steps_ * ((speed * 2)/1000)))/steps_)*1000;
     if(speedoffset < 0){
         speedoffset = 0;
     }
