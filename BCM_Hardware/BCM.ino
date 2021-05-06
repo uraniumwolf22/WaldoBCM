@@ -75,7 +75,7 @@ void serialEvent(){
 
 void loop(){
     if(actionready ==  true){
-        steps_ = calcsteps(motordist.toInt())
+        steps_ = calcsteps(motordist.toInt());
         motor_ = let_to_num(motornum);
 
         if(motordir == "F"){
@@ -92,7 +92,7 @@ void loop(){
 
 int calcspeed(){
     int requestedspeed = motortime.toInt();
-    speedoffset = ((requestedspeed - (steps_ * ((speed * 2)/1000)))/steps_)
+    speedoffset = ((requestedspeed - (steps_ * ((speed * 2)/1000)))/steps_);
     if(speedoffset < 0){
         speedoffset = 0;
     }
@@ -100,11 +100,11 @@ int calcspeed(){
 
 int calcsteps(int deg){
     int steps;
-    steps = deg/1.8
+    steps = deg/1.8;
     return(steps);
 }
 
-int let_to_num(String motorNumber;){    
+int let_to_num(String motorNumber){    
     int motor;
     if (motorNumber == "A"){
         motor = 1;
