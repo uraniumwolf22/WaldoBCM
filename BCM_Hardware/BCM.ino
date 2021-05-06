@@ -100,10 +100,10 @@ int calcspeed(){
     Serial.println(speed);
     speedoffset = ((requestedspeed - (steps_ * ((speed * 2)/1000)))/steps_)*1000;
 
-    Serial.println(speedoffset);
     if(speedoffset < 0){
         speedoffset = 0;
     }
+    Serial.println(speedoffset);
 }
 
 int calcsteps(int deg){
