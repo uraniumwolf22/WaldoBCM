@@ -8,7 +8,7 @@ themesetup()
 
 # Port Connection #
 
-port = serial.Serial('COM3', baudrate=115200)
+port = serial.Serial('COM5', baudrate=115200)
 port.write_timeout = 0.1
 port.read_timeout = 0.1
 print(f'Port opened at {port.name}')
@@ -40,7 +40,8 @@ window = sg.Window('BMC Controller', layout)
 
 def motorMove(pos, dir, type='S', step='A'):
     try:
-        port.write(type+pos+step+dir.encode())
+        command = type+pos+step+dir
+        port.write(command.encode())
         port.read_until('X'.encode())
     except serial.serialutil.SerialTimeoutException: print('Timed out!')
 
