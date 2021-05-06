@@ -3,6 +3,7 @@
 
 #include<Servo.h>
 #include "pinmapping.h"
+int speed;
 
 String motornum;
 String motordir;
@@ -64,10 +65,12 @@ void serialEvent(){
     incomingdata = "";
     actionready = true;
 }
-
+int steps_
 void loop(){
     if(actionready ==  true){
-        
+        steps_ = calcsteps(motordist.toInt())
+
+        executestepcommand(steps_,)
 
 
 
@@ -75,7 +78,34 @@ void loop(){
     }
 }
 
+int calcsteps(int deg){
+    int steps;
+    steps = deg/1.8
+    return(steps);
+}
 
+int let_to_num(String motorNumber;){
+    int motor;
+    if (motorNumber == "A"){
+        motor = 1;
+    }
+    if (motorNumber == "B"){
+        motor = 2;
+    }
+    if (motorNumber == "C"){
+        motor = 3;
+    }
+    if (motorNumber == "D"){
+        motor = 4;
+    }
+    if (motorNumber == "E"){
+        motor = 5;
+    }
+    if (motorNumber == "F"){
+        motor = 6;
+    }
+    return motor;
+}
 int executestepcommand(int res, int motor, int dir){
     if(motor == 1){
         for(int i = 0; i < res; i++){
