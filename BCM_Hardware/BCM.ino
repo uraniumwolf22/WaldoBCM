@@ -92,7 +92,18 @@ void loop(){
 
 int calcspeed(){
     int requestedspeed = motortime.toInt();
-    speedoffset = ((requestedspeed - (steps_ * ((speed * 2)/1000)))/steps_);
+    int realspeed;
+    int compdelta;
+    int reqtime;
+    Serial.println(requestedspeed);
+    Serial.println(steps_);
+    Serial.println(speed);
+    realspeed = speed * 2 / 1000;
+    compdelta = steps_ * realspeed;
+    reqtime = (requestedspeed - compdelta);
+    speedoffset = ((reqtime / 100) * 1000) - compdelta;
+    Serial.println(speedoffset);
+    // speedoffset = ((requestedspeed - (steps_ * ((speed * 2)/1000)))/steps_)*1000;
     if(speedoffset < 0){
         speedoffset = 0;
     }
