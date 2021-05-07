@@ -297,6 +297,7 @@ int executestepcommand(int res, int motor, int dir){
 }
 
 int executeservocommand(int deg,int time,int servonum){
+    deg = (deg/3)*2;
     if(pos[servonum] <= deg){
         for(int i = pos[servonum]; i <= deg; i++){
             if(servonum == 1){
