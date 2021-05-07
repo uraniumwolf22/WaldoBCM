@@ -102,6 +102,42 @@ unsigned long SV1START;
 unsigned long SV1END;
 bool SV1A;
 bool SV1B;
+int SV1TIME;
+
+bool SV2STATE = false;
+int SV2DEG = 0;
+unsigned long SV2START;
+unsigned long SV2END;
+bool SV2A;
+bool SV2B;
+
+bool SV3STATE = false;
+int SV3DEG = 0;
+unsigned long SV3START;
+unsigned long SV3END;
+bool SV3A;
+bool SV3B;
+
+bool SV4STATE = false;
+int SV4DEG = 0;
+unsigned long SV4START;
+unsigned long SV4END;
+bool SV4A;
+bool SV4B;
+
+bool SV5STATE = false;
+int SV5DEG = 0;
+unsigned long SV5START;
+unsigned long SV5END;
+bool SV5A;
+bool SV5B;
+
+bool SV6STATE = false;
+int SV6DEG = 0;
+unsigned long SV6START;
+unsigned long SV6END;
+bool SV6A;
+bool SV6B;
 
 void setup(){                   //all the functions that run once when the MCU us turned on
     Serial.begin(115200);       //start serial
@@ -247,6 +283,9 @@ void serialEvent(){                                     //function that collects
 
     if(let_to_num(motornum) == 1+6){
         SV1DEG = (motordist.toInt()/3)*2;
+        int diff = SV1DEG - pos[1];
+        diff = abs(diff);
+        SV1TIME = motortime.toInt() / diff;
     }
 
     incomingdata = "";                                  //reset the incoming data variable
@@ -295,7 +334,7 @@ void updateS1(){
 void updateSV1(){
     if(SV1STATE == false){
         SV1START = currentmicro();
-        SV1END = currentmicro() + 1500;
+        SV1END = currentmicro() + SV1TIME;
         SV1STATE = true;
         SV1A = false;
         SV1B = false;
