@@ -20,12 +20,7 @@ int sep1,sep2,sep3,sep4,sep5;
 
 String incomingdata = "";
 
-int pos1 = 0;
-int pos2 = 0;
-int pos3 = 0;
-int pos4 = 0;
-int pos5 = 0;
-int pos6 = 0;
+int pos[] = {0,0,0,0,0,0,0};
 
 void setup(){
     //set up serial communication
@@ -89,7 +84,7 @@ int servonum;
 int servodeg_;
 int servotime_;
 void loop(){
-    if(actionready && let_to_num() < 7){
+    if(actionready && let_to_num(motornum) < 7){
         steps_ = calcsteps(motordist.toInt());
         motor_ = let_to_num(motornum);
 
@@ -104,8 +99,8 @@ void loop(){
         actionready = false;
     }
 
-    if(actionready && let_to_num() > 6){
-        servonum = let_to_num() - 6;
+    if(actionready && let_to_num(motornum) > 6){
+        servonum = let_to_num(motornum) - 6;
         servodeg_ = motordist.toInt();
         servotime_ = motortime.toInt();
 
@@ -115,15 +110,11 @@ void loop(){
 
 int calcspeed(){
     long requestedspeed = motortime.toInt();
-    Serial.println(requestedspeed);
-    Serial.println(steps_);
-    Serial.println(speed);
     speedoffset = ((requestedspeed - (steps_ * ((speed * 2)/1000)))/steps_);
 
     if(speedoffset < 0){
         speedoffset = 0;
     }
-    Serial.println(speedoffset);
 }
 
 int calcsteps(int deg){
@@ -306,61 +297,61 @@ int executestepcommand(int res, int motor, int dir){
 }
 
 int executeservocommand(int deg,int time,int servonum){
-    if(pos < deg){
-        for(int i = pos; i < deg; i++){
+    if(pos[servonum] <= deg){
+        for(int i = pos[servonum]; i <= deg; i++){
             if(servonum == 1){
-                servo1.write(i);
-                pos1++
+                pos[servonum] = pos[servonum] + 1;
+                servo1.write(pos[servonum]);
             }
             if(servonum == 2){
-                servo2.write(i);
-                pos2++
+                pos[servonum] = pos[servonum] + 1;
+                servo2.write(pos[servonum]);
             }
             if(servonum == 3){
-                servo3.write(i);
-                pos3++
+                pos[servonum] = pos[servonum] + 1;
+                servo3.write(pos[servonum]);
             }
             if(servonum == 4){
-                servo4.write(i);
-                pos4++
+                pos[servonum] = pos[servonum] + 1;
+                servo4.write(pos[servonum]);
             }
             if(servonum == 5){
-                servo5.write(i);
-                pos5++
+                pos[servonum] = pos[servonum] + 1;
+                servo5.write(pos[servonum]);
             }
             if(servonum == 6){
-                servo6.write(i);
-                pos6++
+                pos[servonum] = pos[servonum] + 1;
+                servo6.write(pos[servonum]);
             }
             delay(15);
         }
     }
 
-    if(pos > deg){
-        for(int i = pos; i > deg; i--){
+    if(pos[servonum] > deg){
+        for(int i = pos[servonum]; i >= deg; i--){
             if(servonum == 1){
-                servo1.write(i);
-                pos1--
+                pos[servonum] = pos[servonum] - 1;
+                servo1.write(pos[servonum]);
             }
             if(servonum == 2){
-                servo2.write(i);
-                pos2--
+                pos[servonum] = pos[servonum] - 1;
+                servo2.write(pos[servonum]);
             }
             if(servonum == 3){
-                servo3.write(i);
-                pos3--
+                pos[servonum] = pos[servonum] - 1;
+                servo3.write(pos[servonum]);
             }
             if(servonum == 4){
-                servo4.write(i);
-                pos4--
+                pos[servonum] = pos[servonum] - 1;
+                servo4.write(pos[servonum]);
             }
             if(servonum == 5){
-                servo5.write(i);
-                pos5--
+                pos[servonum] = pos[servonum] - 1;
+                servo5.write(pos[servonum]);
             }
             if(servonum == 6){
-                servo6.write(i);
-                pos6--
+                pos[servonum] = pos[servonum] - 1;
+                servo6.write(pos[servonum]);
             }
             delay(15);
         }
