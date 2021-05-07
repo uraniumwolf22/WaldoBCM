@@ -11,7 +11,6 @@ String motordir;        //motor direction
 String motortime;       //how long the motor should take to do the operation
 String motordist;       //how far the motor is traveling in degrees
 
-int steps_;             //Steps working var
 int motor_;             //motor number working var
 int direction_;         //direction working var
 int servonum;           //servo num working var
@@ -53,6 +52,7 @@ bool S1A = false;
 bool S1B = false;
 bool S1C = false;
 bool S1STATE = false;
+bool S1DIR;
 int S1STPC = 0;
 int S1ST2D = 0;
 
@@ -61,7 +61,7 @@ void loop(){
         if(S1STATE == false){
             S1START = currentmicro();
             S1MID = currentmicro() + speed;
-            S1END = S1MID + speed + S1SPDOFF;
+            S1END = S1MID + speed + (S1SPDOFF*1000);
             S1STATE = true;
             S1A = false;
             S1B = false;
@@ -69,7 +69,14 @@ void loop(){
         }
 
         if(currentmicro() >= S1START && currentmicro() <= S1MID && S1A == false){
-            digitalWrite(S1_D,HIGH);
+            if(S1DIR == true){
+                digitalWrite(S1_D,HIGH);
+            }
+
+            if(S1DIR == false){
+                digitalWrite(S1_D,LOW);
+            }
+
             digitalWrite(S1_S,HIGH);
             S1A = true;
         }
@@ -98,7 +105,7 @@ void serialEvent(){                                     //function that collects
     while(Serial.available()){
         char inChar = (char)Serial.read();
         incomingdata += inChar;
-        delayMicroseconds(100);                         //this delay has to be here to keep the data from not being broken up
+        delayMicroseconds(150);                         //this delay has to be here to keep the data from not being broken up
     }
     Serial.println(incomingdata);                       //find all the seperator locations
     sep1 = incomingdata.indexOf(":");
@@ -116,7 +123,14 @@ void serialEvent(){                                     //function that collects
         S1STPC = 0;
         S1ST2D = 0;
         S1ST2D = calcsteps(motordist.toInt());
-        S1SPDOFF = calcspeed();
+        S1SPDOFF = calcspeed(S1ST2D);
+        if(motordir == "F"){
+            S1DIR = true;
+        }
+        
+        if(motordir == "B"){
+            S1DIR = false;
+        }
     }
 
     incomingdata = "";                                  //reset the incoming data variable
@@ -170,7 +184,7 @@ int calcsteps(int deg){                 //calculate how many steps the servo nee
     return(steps);
 }
 
-unsigned long calcspeed(){            
+unsigned long calcspeed(int steps_){            
     unsigned long speedoffset;                            //calculate the offset to achieve desired stepper time
     long requestedspeed = motortime.toInt();            //convert the offset time to a long so we can work with numbers over 36000
     speedoffset = ((requestedspeed - (steps_ * ((speed * 2)/1000)))/steps_);    //calculate the offset based on current working variables
