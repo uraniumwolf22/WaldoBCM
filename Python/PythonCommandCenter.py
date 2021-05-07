@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 from theme import themesetup
-# from time import sleep
+from time import sleep
 import serial
 # import io
 
@@ -9,7 +9,7 @@ themesetup()
 # Port Connection #
 
 port = serial.Serial('COM5', baudrate=115200)
-port.write_timeout = 0.1
+port.write_timeout = 0.05
 port.read_timeout = 0.1
 print(f'Port opened at {port.name}')
 
@@ -38,10 +38,11 @@ window = sg.Window('BMC Controller', layout)
 
 # Main Loop #
 
-def motorMove(pos, dir, type='S', step='A'):
+def motorMove(pos, dir, time, dist):
     try:
-        port.write((type+pos+step+dir).encode())
-        port.read_until('X'.encode())
+        port.write((':'+':'.join([pos, dir, time, dist])+':').encode())
+        # port.read_until('X'.encode())
+        sleep(int(time)/1000)
     except serial.serialutil.SerialTimeoutException: print('Timed out!')
 
 while True:
@@ -54,5 +55,5 @@ while True:
     if event != '': print(event)
     step = 'A' if values[0] else 'B' if values[1] else 'C'
 
-    if event == 'F': motorMove('A', 'F', step=step)
-    if event == 'B': motorMove('A', 'B', step=step)
+    if event == 'F': motorMove('A', 'F', '500', '10')
+    if event == 'B': motorMove('A', 'B', '500', '10')
