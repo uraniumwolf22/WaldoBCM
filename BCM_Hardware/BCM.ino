@@ -54,14 +54,14 @@ void loop(){
 
 }
 
-void serialEvent(){                                     //function that collects and parses the serial data
-    while(Serial.available()){
-        char inChar = (char)Serial.read();
-        incomingdata += inChar;
-        delayMicroseconds(100);                         //this delay has to be here to keep the data from not being broken up
-    }
+// void serialEvent(){                                     //function that collects and parses the serial data
+//     while(Serial.available()){
+//         char inChar = (char)Serial.read();
+//         incomingdata += inChar;
+//         delayMicroseconds(100);                         //this delay has to be here to keep the data from not being broken up
+//     }
 
-}
+// }
 
 int calcend(int delay){
     return(millis()+delay);
