@@ -175,6 +175,9 @@ int let_to_num(String motorNumber){     //function to convert the motor letter t
 }
 
 int executeservocommand(int deg,int time,int servonum){         //functions to command the servos
+    int diff = deg - pos[servonum];
+    diff = abs(diff);
+    int delay = time / diff;
     if(pos[servonum] <= deg){                                   //check if the desired position is smaller than the current position
         for(int i = pos[servonum]; i <= deg; i++){              //itterate until we have the desired angle
             if(servonum == 1){
@@ -201,7 +204,7 @@ int executeservocommand(int deg,int time,int servonum){         //functions to c
                 pos[servonum] = pos[servonum] + 1;
                 servo6.write(pos[servonum]);
             }   
-            delay(15);                                         //wait
+            delay(delay);                                         //wait
         }
     }
 
@@ -232,7 +235,7 @@ int executeservocommand(int deg,int time,int servonum){         //functions to c
                 pos[servonum] = pos[servonum] - 1;
                 servo6.write(pos[servonum]);
             }
-            delay(15);
+            delay(delay;
         }
     }
 }
