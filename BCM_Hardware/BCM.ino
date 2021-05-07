@@ -56,7 +56,182 @@ bool S1DIR;
 int S1STPC = 0;
 int S1ST2D = 0;
 
+unsigned long S2SPDOFF;
+unsigned long S2START;
+unsigned long S2MID;
+unsigned long S2END;
+bool S2A = false;
+bool S2B = false;
+bool S2C = false;
+bool S2STATE = false;
+bool S2DIR;
+int S2STPC = 0;
+int S2ST2D = 0;
+
+unsigned long S3SPDOFF;
+unsigned long S3START;
+unsigned long S3MID;
+unsigned long S3END;
+bool S3A = false;
+bool S3B = false;
+bool S3C = false;
+bool S3STATE = false;
+bool S3DIR;
+int S3STPC = 0;
+int S3ST2D = 0;
+
+unsigned long S4SPDOFF;
+unsigned long S4START;
+unsigned long S4MID;
+unsigned long S4END;
+bool S4A = false;
+bool S4B = false;
+bool S4C = false;
+bool S4STATE = false;
+bool S4DIR;
+int S4STPC = 0;
+int S4ST2D = 0;
+
+unsigned long S5SPDOFF;
+unsigned long S5START;
+unsigned long S5MID;
+unsigned long S5END;
+bool S5A = false;
+bool S5B = false;
+bool S5C = false;
+bool S5STATE = false;
+bool S5DIR;
+int S5STPC = 0;
+int S5ST2D = 0;
+
+unsigned long S6SPDOFF;
+unsigned long S6START;
+unsigned long S6MID;
+unsigned long S6END;
+bool S6A = false;
+bool S6B = false;
+bool S6C = false;
+bool S6STATE = false;
+bool S6DIR;
+int S6STPC = 0;
+int S6ST2D = 0;
+
 void loop(){
+    updateS1();
+    updateS2();
+    updateS3();
+    updateS4();
+    updateS5();
+    updateS6();
+}
+
+void serialEvent(){                                     //function that collects and parses the serial data
+    while(Serial.available()){
+        char inChar = (char)Serial.read();
+        incomingdata += inChar;
+        delayMicroseconds(150);                         //this delay has to be here to keep the data from not being broken up
+    }
+    Serial.println(incomingdata);                       //find all the seperator locations
+    sep1 = incomingdata.indexOf(":");
+    sep2 = incomingdata.indexOf(":",sep1+1);
+    sep3 = incomingdata.indexOf(":",sep2+1);
+    sep4 = incomingdata.indexOf(":",sep3+1);
+    sep5 = incomingdata.indexOf(":",sep4+1);
+    
+    motornum = incomingdata.substring(sep1+1,sep2);     //split the data based on the seperator locations
+    motordir = incomingdata.substring(sep2+1,sep3);
+    motortime = incomingdata.substring(sep3+1,sep4);
+    motordist = incomingdata.substring(sep4+1,sep5);
+
+    if(let_to_num(motornum) == 1){
+        S1STPC = 0;
+        S1ST2D = 0;
+        S1ST2D = calcsteps(motordist.toInt());
+        S1SPDOFF = calcspeed(S1ST2D);
+        if(motordir == "F"){
+            S1DIR = true;
+        }
+        
+        if(motordir == "B"){
+            S1DIR = false;
+        }
+    }
+
+    if(let_to_num(motornum) == 2){
+        S2STPC = 0;
+        S2ST2D = 0;
+        S2ST2D = calcsteps(motordist.toInt());
+        S2SPDOFF = calcspeed(S2ST2D);
+        if(motordir == "F"){
+            S2DIR = true;
+        }
+        
+        if(motordir == "B"){
+            S2DIR = false;
+        }
+    }
+
+    if(let_to_num(motornum) == 3){
+        S3STPC = 0;
+        S3ST2D = 0;
+        S3ST2D = calcsteps(motordist.toInt());
+        S3SPDOFF = calcspeed(S3ST2D);
+        if(motordir == "F"){
+            S3DIR = true;
+        }
+        
+        if(motordir == "B"){
+            S3DIR = false;
+        }
+    }
+
+    if(let_to_num(motornum) == 4){
+        S4STPC = 0;
+        S4ST2D = 0;
+        S4ST2D = calcsteps(motordist.toInt());
+        S4SPDOFF = calcspeed(S4ST2D);
+        if(motordir == "F"){
+            S4DIR = true;
+        }
+        
+        if(motordir == "B"){
+            S4DIR = false;
+        }
+    }
+
+    if(let_to_num(motornum) == 5){
+        S5STPC = 0;
+        S5ST2D = 0;
+        S5ST2D = calcsteps(motordist.toInt());
+        S5SPDOFF = calcspeed(S5ST2D);
+        if(motordir == "F"){
+            S5DIR = true;
+        }
+        
+        if(motordir == "B"){
+            S5DIR = false;
+        }
+    }
+
+    if(let_to_num(motornum) == 6){
+        S6STPC = 0;
+        S6ST2D = 0;
+        S6ST2D = calcsteps(motordist.toInt());
+        S6SPDOFF = calcspeed(S6ST2D);
+        if(motordir == "F"){
+            S6DIR = true;
+        }
+        
+        if(motordir == "B"){
+            S6DIR = false;
+        }
+    }
+
+    incomingdata = "";                                  //reset the incoming data variable
+    actionready = true;                                 //set the action ready flag so the main loop knows there is a command to execute
+}
+
+void updateS1(){
     if(S1ST2D > S1STPC){
         if(S1STATE == false){
             S1START = currentmicro();
@@ -94,48 +269,196 @@ void loop(){
     }
 }
 
-
-
-
-unsigned long currentmicro(){
-    return(micros());
-}
-
-void serialEvent(){                                     //function that collects and parses the serial data
-    while(Serial.available()){
-        char inChar = (char)Serial.read();
-        incomingdata += inChar;
-        delayMicroseconds(150);                         //this delay has to be here to keep the data from not being broken up
-    }
-    Serial.println(incomingdata);                       //find all the seperator locations
-    sep1 = incomingdata.indexOf(":");
-    sep2 = incomingdata.indexOf(":",sep1+1);
-    sep3 = incomingdata.indexOf(":",sep2+1);
-    sep4 = incomingdata.indexOf(":",sep3+1);
-    sep5 = incomingdata.indexOf(":",sep4+1);
-    
-    motornum = incomingdata.substring(sep1+1,sep2);     //split the data based on the seperator locations
-    motordir = incomingdata.substring(sep2+1,sep3);
-    motortime = incomingdata.substring(sep3+1,sep4);
-    motordist = incomingdata.substring(sep4+1,sep5);
-
-    if(let_to_num(motornum) == 1){
-        S1STPC = 0;
-        S1ST2D = 0;
-        S1ST2D = calcsteps(motordist.toInt());
-        S1SPDOFF = calcspeed(S1ST2D);
-        if(motordir == "F"){
-            S1DIR = true;
+void updateS2(){
+    if(S2ST2D > S2STPC){
+        if(S2STATE == false){
+            S2START = currentmicro();
+            S2MID = currentmicro() + speed;
+            S2END = S2MID + speed + (S1SPDOFF*1000);
+            S2STATE = true;
+            S2A = false;
+            S2B = false;
+            S2C = false;
         }
-        
-        if(motordir == "B"){
-            S1DIR = false;
+
+        if(currentmicro() >= S2START && currentmicro() <= S2MID && S2A == false){
+            if(S2DIR == true){
+                digitalWrite(S2_D,HIGH);
+            }
+
+            if(S2DIR == false){
+                digitalWrite(S2_D,LOW);
+            }
+
+            digitalWrite(S2_S,HIGH);
+            S2A = true;
+        }
+
+        if(currentmicro() >= S2MID && currentmicro() <= S2END && S2B == false){
+            digitalWrite(S2_S,LOW);
+            S2B = true;
+        }
+
+        if(currentmicro() >= S2END && S2C == false){
+            S2STATE = false;
+            S2C = true;
+            S2STPC++;
         }
     }
-
-    incomingdata = "";                                  //reset the incoming data variable
-    actionready = true;                                 //set the action ready flag so the main loop knows there is a command to execute
 }
+
+void updateS3(){
+    if(S3ST2D > S3STPC){
+        if(S3STATE == false){
+            S3START = currentmicro();
+            S3MID = currentmicro() + speed;
+            S3END = S3MID + speed + (S3SPDOFF*1000);
+            S3STATE = true;
+            S3A = false;
+            S3B = false;
+            S3C = false;
+        }
+
+        if(currentmicro() >= S3START && currentmicro() <= S3MID && S3A == false){
+            if(S3DIR == true){
+                digitalWrite(S3_D,HIGH);
+            }
+
+            if(S3DIR == false){
+                digitalWrite(S3_D,LOW);
+            }
+
+            digitalWrite(S3_S,HIGH);
+            S3A = true;
+        }
+
+        if(currentmicro() >= S3MID && currentmicro() <= S3END && S3B == false){
+            digitalWrite(S3_S,LOW);
+            S3B = true;
+        }
+
+        if(currentmicro() >= S3END && S3C == false){
+            S3STATE = false;
+            S3C = true;
+            S3STPC++;
+        }
+    }
+}
+
+void updateS4(){
+    if(S4ST2D > S4STPC){
+        if(S4STATE == false){
+            S4START = currentmicro();
+            S4MID = currentmicro() + speed;
+            S4END = S4MID + speed + (S4SPDOFF*1000);
+            S4STATE = true;
+            S4A = false;
+            S4B = false;
+            S4C = false;
+        }
+
+        if(currentmicro() >= S4START && currentmicro() <= S4MID && S4A == false){
+            if(S4DIR == true){
+                digitalWrite(S4_D,HIGH);
+            }
+
+            if(S4DIR == false){
+                digitalWrite(S4_D,LOW);
+            }
+
+            digitalWrite(S4_S,HIGH);
+            S4A = true;
+        }
+
+        if(currentmicro() >= S4MID && currentmicro() <= S4END && S4B == false){
+            digitalWrite(S4_S,LOW);
+            S4B = true;
+        }
+
+        if(currentmicro() >= S4END && S4C == false){
+            S4STATE = false;
+            S4C = true;
+            S4STPC++;
+        }
+    }
+}
+
+void updateS5(){
+    if(S5ST2D > S5STPC){
+        if(S5STATE == false){
+            S5START = currentmicro();
+            S5MID = currentmicro() + speed;
+            S5END = S5MID + speed + (S5SPDOFF*1000);
+            S5STATE = true;
+            S5A = false;
+            S5B = false;
+            S5C = false;
+        }
+
+        if(currentmicro() >= S5START && currentmicro() <= S5MID && S5A == false){
+            if(S5DIR == true){
+                digitalWrite(S5_D,HIGH);
+            }
+
+            if(S5DIR == false){
+                digitalWrite(S5_D,LOW);
+            }
+
+            digitalWrite(S5_S,HIGH);
+            S5A = true;
+        }
+
+        if(currentmicro() >= S5MID && currentmicro() <= S5END && S5B == false){
+            digitalWrite(S5_S,LOW);
+            S5B = true;
+        }
+
+        if(currentmicro() >= S5END && S5C == false){
+            S5STATE = false;
+            S5C = true;
+            S5STPC++;
+        }
+    }
+}
+
+void updateS6(){
+    if(S6ST2D > S6STPC){
+        if(S6STATE == false){
+            S6START = currentmicro();
+            S6MID = currentmicro() + speed;
+            S6END = S6MID + speed + (S6SPDOFF*1000);
+            S6STATE = true;
+            S6A = false;
+            S6B = false;
+            S6C = false;
+        }
+
+        if(currentmicro() >= S6START && currentmicro() <= S6MID && S6A == false){
+            if(S6DIR == true){
+                digitalWrite(S6_D,HIGH);
+            }
+
+            if(S6DIR == false){
+                digitalWrite(S6_D,LOW);
+            }
+
+            digitalWrite(S6_S,HIGH);
+            S6A = true;
+        }
+
+        if(currentmicro() >= S6MID && currentmicro() <= S6END && S6B == false){
+            digitalWrite(S6_S,LOW);
+            S6B = true;
+        }
+
+        if(currentmicro() >= S6END && S6C == false){
+            S6STATE = false;
+            S6C = true;
+            S6STPC++;
+        }
+    }
+}
+
 
 int let_to_num(String motorNumber){     //function to convert the motor letter to the motor number
     int motor;
@@ -185,6 +508,7 @@ int calcsteps(int deg){                 //calculate how many steps the servo nee
 }
 
 unsigned long calcspeed(int steps_){            
+
     unsigned long speedoffset;                            //calculate the offset to achieve desired stepper time
     long requestedspeed = motortime.toInt();            //convert the offset time to a long so we can work with numbers over 36000
     speedoffset = ((requestedspeed - (steps_ * ((speed * 2)/1000)))/steps_);    //calculate the offset based on current working variables
@@ -192,4 +516,8 @@ unsigned long calcspeed(int steps_){
         speedoffset = 0;
     }
     return(speedoffset);
+}
+
+unsigned long currentmicro(){
+    return(micros());
 }
