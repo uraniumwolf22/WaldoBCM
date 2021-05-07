@@ -24,37 +24,17 @@ String incomingdata = "";       //string that holds the incoming data from the s
 
 int pos[] = {0,0,0,0,0,0,0};    //array to store all the servo positions
 
-void setup(){                   //all the functions that run once when the MCU us turned on
-    //set up serial communication
-
-
-    Serial.begin(115200);       //start serial
-    // set all the pin modes to output.
-    pinMode(S1_S,OUTPUT);
-    pinMode(S1_D,OUTPUT);
-    pinMode(S2_S,OUTPUT);
-    pinMode(S2_D,OUTPUT);
-    pinMode(S3_S,OUTPUT);
-    pinMode(S3_D,OUTPUT);
-    pinMode(S4_S,OUTPUT);
-    pinMode(S4_D,OUTPUT);
-    pinMode(S5_S,OUTPUT);
-    pinMode(S5_D,OUTPUT);
-    pinMode(S6_S,OUTPUT);
-    pinMode(S6_D,OUTPUT);
-}
-
-unsigned long S1SPDOFF;
-unsigned long S1START;
-unsigned long S1MID;
-unsigned long S1END;
-bool S1A = false;
-bool S1B = false;
-bool S1C = false;
-bool S1STATE = false;
-bool S1DIR;
-int S1STPC = 0;
-int S1ST2D = 0;
+unsigned long S1SPDOFF;         //stepper speed offset
+unsigned long S1START;          //stepper start time
+unsigned long S1MID;            //stepper midpoint time
+unsigned long S1END;            //stepper end time
+bool S1A = false;               //step A complete
+bool S1B = false;               //step B complete
+bool S1C = false;               //step C complete
+bool S1STATE = false;           //whole step complete/reset status flag
+bool S1DIR;                     //stepper direction
+int S1STPC = 0;                 //stepper current step count
+int S1ST2D = 0;                 //stepper steps to do count
 
 unsigned long S2SPDOFF;
 unsigned long S2START;
@@ -115,6 +95,36 @@ bool S6STATE = false;
 bool S6DIR;
 int S6STPC = 0;
 int S6ST2D = 0;
+
+void setup(){                   //all the functions that run once when the MCU us turned on
+    Serial.begin(115200);       //start serial
+    pinMode(S1_S,OUTPUT);
+    pinMode(S1_D,OUTPUT);
+    pinMode(S2_S,OUTPUT);
+    pinMode(S2_D,OUTPUT);
+    pinMode(S3_S,OUTPUT);
+    pinMode(S3_D,OUTPUT);
+    pinMode(S4_S,OUTPUT);
+    pinMode(S4_D,OUTPUT);
+    pinMode(S5_S,OUTPUT);
+    pinMode(S5_D,OUTPUT);
+    pinMode(S6_S,OUTPUT);
+    pinMode(S6_D,OUTPUT);
+    servo1.attach(A5);
+    servo2.attach(A0);
+    servo3.attach(A4);
+    servo4.attach(A3);
+    servo5.attach(A2);
+    servo6.attach(A1);
+    Serial.println("Serial link established");
+
+    servo1.write(0);        //make sure all of the servos are locked in the 0 deg position
+    servo2.write(0);
+    servo3.write(0);
+    servo4.write(0);
+    servo5.write(0);
+    servo6.write(0);
+}
 
 void loop(){
     updateS1();
@@ -227,6 +237,10 @@ void serialEvent(){                                     //function that collects
         }
     }
 
+    if(let_to_num(motornum) == 1+6){
+        SV1DEG = motordist.toInt();
+    }
+
     incomingdata = "";                                  //reset the incoming data variable
     actionready = true;                                 //set the action ready flag so the main loop knows there is a command to execute
 }
@@ -268,6 +282,42 @@ void updateS1(){
         }
     }
 }
+
+bool SV1STATE = false;
+int SV1DEG = 0;
+unsigned long SV1START;
+unsigned long SV1END;
+bool SV1A;
+bool SV1B;
+
+void updateSV1(){
+    if(SV1STATE == false){
+        SV1START = currentmicro();
+        SV1END = currentmicro() + 1500;
+        SV1STATE = true;
+        SV1A = false;
+        SV1B = false;
+    }
+
+    if(currentmicro() >= SV1START && currentmicro() <= SV1END && SV1A == false){
+        if(pos[1] <= SV1DEG){
+            pos[1] = pos[1] + 1;
+            servo1.write(pos[1]);
+        }
+        if(pos[1] > SV1DEG){
+            pos[1] = pos[1] - 1;
+            servo1.write(pos[1]);
+        }
+        SV1A == true;
+    }
+
+    if(currentmicro() >= SV1END && SV1B == false){
+        SV1B == true;
+        SV1STATE = false;
+    }
+}
+
+
 
 void updateS2(){
     if(S2ST2D > S2STPC){
