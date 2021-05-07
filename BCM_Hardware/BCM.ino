@@ -19,6 +19,14 @@ bool actionready = false;
 int sep1,sep2,sep3,sep4,sep5;
 
 String incomingdata = "";
+
+int pos1 = 0;
+int pos2 = 0;
+int pos3 = 0;
+int pos4 = 0;
+int pos5 = 0;
+int pos6 = 0;
+
 void setup(){
     //set up serial communication
 
@@ -38,13 +46,19 @@ void setup(){
     pinMode(S6_S,OUTPUT);
     pinMode(S6_D,OUTPUT);
     //servo pin mapping
-    // servo1.attach(A5);
-    // servo2.attach(A0);
-    // servo3.attach(A4);
-    // servo4.attach(A3);
-    // servo5.attach(A2);
-    // servo6.attach(A1);
+    servo1.attach(A5);
+    servo2.attach(A0);
+    servo3.attach(A4);
+    servo4.attach(A3);
+    servo5.attach(A2);
+    servo6.attach(A1);
     Serial.println("Serial link established");
+    servo1.write(0);
+    servo2.write(0);
+    servo3.write(0);
+    servo4.write(0);
+    servo5.write(0);
+    servo6.write(0);
 }
 
 
@@ -71,10 +85,11 @@ void serialEvent(){
 }
 
 
-
-
+int servonum;
+int servodeg_;
+int servotime_;
 void loop(){
-    if(actionready ==  true){
+    if(actionready && let_to_num() < 7){
         steps_ = calcsteps(motordist.toInt());
         motor_ = let_to_num(motornum);
 
@@ -88,13 +103,18 @@ void loop(){
         executestepcommand(steps_,motor_,direction_);
         actionready = false;
     }
+
+    if(actionready && let_to_num() > 6){
+        servonum = let_to_num() - 6;
+        servodeg_ = motordist.toInt();
+        servotime_ = motortime.toInt();
+
+        executeservocommand(servodeg_,servotime_,servonum);
+    }
 }
 
 int calcspeed(){
     long requestedspeed = motortime.toInt();
-    int realspeed;
-    int compdelta;
-    int reqtime;
     Serial.println(requestedspeed);
     Serial.println(steps_);
     Serial.println(speed);
@@ -132,6 +152,26 @@ int let_to_num(String motorNumber){
     if (motorNumber == "F"){
         motor = 6;
     }
+    if (motorNumber == "G"){
+        motor = 7;
+    }
+    if (motorNumber == "H"){
+        motor = 8;
+    }
+    if (motorNumber == "I"){
+        motor = 9;
+    }
+    if (motorNumber == "J"){
+        motor = 10;
+    }
+    if (motorNumber == "K"){
+        motor = 11;
+    }
+    if (motorNumber == "L"){
+        motor = 12;
+    }
+
+
     return motor;
 }
 
@@ -261,6 +301,68 @@ int executestepcommand(int res, int motor, int dir){
                 delayMicroseconds(speed);
                 delay(speedoffset);
             }
+        }
+    }
+}
+
+int executeservocommand(int deg,int time,int servonum){
+    if(pos < deg){
+        for(int i = pos; i < deg; i++){
+            if(servonum == 1){
+                servo1.write(i);
+                pos1++
+            }
+            if(servonum == 2){
+                servo2.write(i);
+                pos2++
+            }
+            if(servonum == 3){
+                servo3.write(i);
+                pos3++
+            }
+            if(servonum == 4){
+                servo4.write(i);
+                pos4++
+            }
+            if(servonum == 5){
+                servo5.write(i);
+                pos5++
+            }
+            if(servonum == 6){
+                servo6.write(i);
+                pos6++
+            }
+            delay(15);
+        }
+    }
+
+    if(pos > deg){
+        for(int i = pos; i > deg; i--){
+            if(servonum == 1){
+                servo1.write(i);
+                pos1--
+            }
+            if(servonum == 2){
+                servo2.write(i);
+                pos2--
+            }
+            if(servonum == 3){
+                servo3.write(i);
+                pos3--
+            }
+            if(servonum == 4){
+                servo4.write(i);
+                pos4--
+            }
+            if(servonum == 5){
+                servo5.write(i);
+                pos5--
+            }
+            if(servonum == 6){
+                servo6.write(i);
+                pos6--
+            }
+            delay(15);
         }
     }
 }
