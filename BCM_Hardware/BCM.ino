@@ -96,6 +96,13 @@ bool S6DIR;
 int S6STPC = 0;
 int S6ST2D = 0;
 
+bool SV1STATE = false;
+int SV1DEG = 0;
+unsigned long SV1START;
+unsigned long SV1END;
+bool SV1A;
+bool SV1B;
+
 void setup(){                   //all the functions that run once when the MCU us turned on
     Serial.begin(115200);       //start serial
     pinMode(S1_S,OUTPUT);
@@ -133,6 +140,7 @@ void loop(){
     updateS4();
     updateS5();
     updateS6();
+    updateSV1();
 }
 
 void serialEvent(){                                     //function that collects and parses the serial data
@@ -238,7 +246,7 @@ void serialEvent(){                                     //function that collects
     }
 
     if(let_to_num(motornum) == 1+6){
-        SV1DEG = motordist.toInt();
+        SV1DEG = (motordist.toInt()/3)*2;
     }
 
     incomingdata = "";                                  //reset the incoming data variable
@@ -283,12 +291,6 @@ void updateS1(){
     }
 }
 
-bool SV1STATE = false;
-int SV1DEG = 0;
-unsigned long SV1START;
-unsigned long SV1END;
-bool SV1A;
-bool SV1B;
 
 void updateSV1(){
     if(SV1STATE == false){
