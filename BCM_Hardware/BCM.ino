@@ -4,9 +4,6 @@
 #include<Servo.h>
 #include "pinmapping.h"
 
-int S1timer
-
-
 void setup(){                   //all the functions that run once when the MCU us turned on
     //set up serial communication
 
@@ -26,32 +23,44 @@ void setup(){                   //all the functions that run once when the MCU u
     pinMode(S6_S,OUTPUT);
     pinMode(S6_D,OUTPUT);
 }
-int S1START;
-int S1END;
-int S1MID;
-bool S1SET = false;
+long speed = 500;
+unsigned long prevmicro = 0;
+unsigned long S1START;
+unsigned long S1MID;
+unsigned long S1END;
+
+bool S1A = false;
+bool S1B = false;
+bool S1C = false;
+
+bool S1STATE = false;
+
 void loop(){
-    if(S1SET == false){
-        S1START = calcend(.1);
-        S1MID = calcend(.6);
-        S1END = calcend(1.1);
-        S1SET = true;
+    if(S1STATE == false){
+        S1START = currentmicro();
+        S1MID = currentmicro() + 500;
+        S1END = S1MID + 500;
+        S1STATE = true;
+        S1A = false;
+        S1B = false;
+        S1C = false;
     }
 
-    if(checktime(S1START)){
+    if(currentmicro() >= S1START && currentmicro() <= S1MID && S1A == false){
         digitalWrite(S1_D,HIGH);
         digitalWrite(S1_S,HIGH);
+        S1A = true;
     }
 
-    if(checktime(S1MID)){
+    if(currentmicro() >= S1MID && currentmicro() <= S1END && S1B == false){
         digitalWrite(S1_S,LOW);
+        S1B = true;
     }
 
-    if(checktime(S1END)){
-        S1SET = false;
+    if(currentmicro() >= S1END && S1C == false){
+        S1STATE = false;
+        S1C = true;
     }
-
-
 }
 
 // void serialEvent(){                                     //function that collects and parses the serial data
@@ -63,15 +72,6 @@ void loop(){
 
 // }
 
-int calcend(int delay){
-    return(millis()+delay);
-}
-
-int checktime(int time){
-    if(millis() == time){
-        return(true);
-    }
-    if(millis() != time){
-        return(false);
-    }
+unsigned long currentmicro(){
+    return(micros());
 }
