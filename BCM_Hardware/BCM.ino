@@ -4,7 +4,7 @@
 #include<Servo.h>
 #include "pinmapping.h"
 
-int S1timer
+int S1timer;
 
 
 void setup(){                   //all the functions that run once when the MCU us turned on
@@ -32,6 +32,7 @@ int S1MID;
 bool S1SET = false;
 void loop(){
     if(S1SET == false){
+        Serial.println("Set times");
         S1START = calcend(.1);
         S1MID = calcend(.6);
         S1END = calcend(1.1);
@@ -39,15 +40,18 @@ void loop(){
     }
 
     if(checktime(S1START)){
+        Serial.println("High");
         digitalWrite(S1_D,HIGH);
         digitalWrite(S1_S,HIGH);
     }
 
     if(checktime(S1MID)){
+        Serial.println("Low");
         digitalWrite(S1_S,LOW);
     }
 
     if(checktime(S1END)){
+        Serial.println("Reset vars");
         S1SET = false;
     }
 
@@ -68,10 +72,10 @@ int calcend(int delay){
 }
 
 int checktime(int time){
-    if(millis() == time){
+    if(millis() >= time){
         return(true);
     }
-    if(millis() != time){
+    if(millis() <= time){
         return(false);
     }
 }
