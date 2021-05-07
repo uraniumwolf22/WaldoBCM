@@ -5,7 +5,6 @@
 #include "pinmapping.h"
 
 int speed = 500;        //global speed of stepper motor step time
-long speedoffset = 0;   //speed offset to lengthen stepper time
 
 String motornum;        //what number motor we are operating
 String motordir;        //motor direction
@@ -46,6 +45,7 @@ void setup(){                   //all the functions that run once when the MCU u
     pinMode(S6_D,OUTPUT);
 }
 
+unsigned long S1SPDOFF;
 unsigned long S1START;
 unsigned long S1MID;
 unsigned long S1END;
@@ -55,12 +55,13 @@ bool S1C = false;
 bool S1STATE = false;
 int S1STPC = 0;
 int S1ST2D = 0;
+
 void loop(){
     if(S1ST2D > S1STPC){
         if(S1STATE == false){
             S1START = currentmicro();
-            S1MID = currentmicro() + 500;
-            S1END = S1MID + 500;
+            S1MID = currentmicro() + speed;
+            S1END = S1MID + speed + S1SPDOFF;
             S1STATE = true;
             S1A = false;
             S1B = false;
@@ -115,6 +116,7 @@ void serialEvent(){                                     //function that collects
         S1STPC = 0;
         S1ST2D = 0;
         S1ST2D = calcsteps(motordist.toInt());
+        S1SPDOFF = calcspeed();
     }
 
     incomingdata = "";                                  //reset the incoming data variable
@@ -166,4 +168,14 @@ int calcsteps(int deg){                 //calculate how many steps the servo nee
     int steps;
     steps = deg/1.8;
     return(steps);
+}
+
+unsigned long calcspeed(){            
+    unsigned long speedoffset;                            //calculate the offset to achieve desired stepper time
+    long requestedspeed = motortime.toInt();            //convert the offset time to a long so we can work with numbers over 36000
+    speedoffset = ((requestedspeed - (steps_ * ((speed * 2)/1000)))/steps_);    //calculate the offset based on current working variables
+    if(speedoffset < 0){                                //if the offset is smaller than the minumum required time make the offset 0 aka max speed
+        speedoffset = 0;
+    }
+    return(speedoffset);
 }
