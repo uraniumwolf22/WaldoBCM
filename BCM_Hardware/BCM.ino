@@ -244,6 +244,10 @@ void serialEvent(){                                     //Function that gets ser
     motortime = incomingdata.substring(sep3+1,sep4);    //sets the desired time for action to take from serial data
     motordist = incomingdata.substring(sep4+1,sep5);    //sets the desired motor distance in degrees from serial data
 
+/* -------------------------------------------------------------------------- */
+/*                     SET WORKING VARS FOR STEPPER MOTORS                    */
+/* -------------------------------------------------------------------------- */
+
     if(let_to_num(motornum) == 1){                      //check what the desired motor number is and if its a stepper based on alpha serial data
         S1STPC = 0;                                     //set the stepper motor current step counter to 0
         S1ST2D = 0;                                     //set the stepper motor steps to do counter to 0
@@ -328,6 +332,10 @@ void serialEvent(){                                     //Function that gets ser
         }
     }
 
+/* -------------------------------------------------------------------------- */
+/*                           SET SERVO WORKING VARS                           */
+/* -------------------------------------------------------------------------- */
+
     if(let_to_num(motornum) == 1+6){
         SV1DEG = (motordist.toInt()/3)*2;
         long diff = SV1DEG - pos[1];
@@ -370,24 +378,28 @@ void serialEvent(){                                     //Function that gets ser
     actionready = true;                                 //set the action ready flag so the main loop knows there is a command to execute
 }
 
-void updateSV1(){
+/* -------------------------------------------------------------------------- */
+/*                     FUNCTIONS TO UPDATE STEPPER MOTORS                     */
+/* -------------------------------------------------------------------------- */
+
+void updateSV1(){                                       //function to update the stepper motor state
     if(SV1STATE == false){
         // Serial.println("update start");
-        SV1START = currentmicro();
-        SV1END = SV1START + SV1TIME * 1000;
+        SV1START = currentmicro();                      //set the starting time to the current microsecond
+        SV1END = SV1START + SV1TIME * 1000;             //set the ending time to the start time plus the offset time
         // Serial.println((SV1TIME * 1000));
-        SV1STATE = true;
-        SV1A = false;
-        SV1B = false;
-        SV1CHANGEEN = true;
+        SV1STATE = true;                                //set the servo activity state to active
+        SV1A = false;                                   //set the servo event 1 state to false
+        SV1B = false;                                   //set the servo event 2 state to false
+        SV1CHANGEEN = true;                             //set the enable change flag to true to enable servo angle update
     }
 
-    if(currentmicro() >= SV1START && currentmicro() <= SV1END && SV1A == false && SV1CHANGEEN == true){
-        if(pos[1] <= SV1DEG){
-            pos[1] = pos[1] + 1;
-            servo1.write(pos[1]);
+    if(currentmicro() >= SV1START && currentmicro() <= SV1END && SV1A == false && SV1CHANGEEN == true){ //check if it should update the sevo position
+        if(pos[1] <= SV1DEG){                           //check if the current servo position is less than what it should be
+            pos[1] = pos[1] + 1;                        //if the position is less than what it should be increase angle
+            servo1.write(pos[1]);                       //tell ther servo what position it should be at
         }
-        if(pos[1] > SV1DEG){
+        if(pos[1] > SV1DEG){                            //check if the serbo position is more than what it should be
             pos[1] = pos[1] - 1;
             servo1.write(pos[1]);
         }
