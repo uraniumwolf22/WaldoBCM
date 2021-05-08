@@ -103,7 +103,7 @@ unsigned long SV1START;
 unsigned long SV1END;
 bool SV1A;
 bool SV1B;
-int SV1TIME;
+unsigned long SV1TIME;
 
 void setup(){                   //all the functions that run once when the MCU us turned on
     Serial.begin(115200);       //start serial
@@ -249,7 +249,7 @@ void serialEvent(){                                     //function that collects
 
     if(let_to_num(motornum) == 1+6){
         SV1DEG = (motordist.toInt()/3)*2;
-        int diff = SV1DEG - pos[1];
+        long diff = SV1DEG - pos[1];
         diff = abs(diff);
         SV1TIME = motortime.toInt() / diff;
     }
@@ -299,33 +299,33 @@ void updateS1(){
 
 void updateSV1(){
     if(SV1STATE == false){
-        Serial.println("update start");
+        // Serial.println("update start");
         SV1START = currentmicro();
         SV1END = SV1START + SV1TIME * 1000;
+        // Serial.println((SV1TIME * 1000));
         SV1STATE = true;
         SV1A = false;
         SV1B = false;
         SV1CHANGEEN = true;
     }
 
-    if(currentmicro() >= SV1START && currentmicro() <= (SV1START + 16) && SV1A == false){
+    if(currentmicro() >= SV1START && currentmicro() <= SV1END && SV1A == false && SV1CHANGEEN == true){
         if(pos[1] <= SV1DEG){
             pos[1] = pos[1] + 1;
             servo1.write(pos[1]);
-            SV1CHANGEEN = false;
         }
         if(pos[1] > SV1DEG){
             pos[1] = pos[1] - 1;
             servo1.write(pos[1]);
-            SV1CHANGEEN = false;
         }
+        SV1CHANGEEN = false;
         SV1A == true;
     }
 
     if(currentmicro() >= SV1END && SV1B == false){
         SV1B == true;
         SV1STATE = false;
-        Serial.println("update end");
+        // Serial.println("update end");
         Serial.println(pos[1]);
     }
 }
