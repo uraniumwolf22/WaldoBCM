@@ -299,15 +299,16 @@ void updateS1(){
 
 void updateSV1(){
     if(SV1STATE == false){
+        Serial.println("update start");
         SV1START = currentmicro();
-        SV1END = currentmicro() + SV1TIME;
+        SV1END = SV1START + SV1TIME * 1000;
         SV1STATE = true;
         SV1A = false;
         SV1B = false;
         SV1CHANGEEN = true;
     }
 
-    if(currentmicro() >= SV1START && currentmicro() <= SV1END && SV1A == false){
+    if(currentmicro() >= SV1START && currentmicro() <= (SV1START + 16) && SV1A == false){
         if(pos[1] <= SV1DEG){
             pos[1] = pos[1] + 1;
             servo1.write(pos[1]);
@@ -324,6 +325,8 @@ void updateSV1(){
     if(currentmicro() >= SV1END && SV1B == false){
         SV1B == true;
         SV1STATE = false;
+        Serial.println("update end");
+        Serial.println(pos[1]);
     }
 }
 
