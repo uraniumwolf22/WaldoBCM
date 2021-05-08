@@ -96,69 +96,124 @@ bool S6DIR;
 int S6STPC = 0;
 int S6ST2D = 0;
 
-bool SV1STATE = false;
-bool SV1CHANGEEN;
-int SV1DEG = 0;
-unsigned long SV1START;
-unsigned long SV1END;
-bool SV1A;
-bool SV1B;
-unsigned long SV1TIME;
+bool SV1STATE = false;      //state of the Servo motor
+bool SV1CHANGEEN;           //Enable a degree state change for the next check
+int SV1DEG = 0;             //Requested servo angle
+unsigned long SV1START;     //servo move start time
+unsigned long SV1END;       //servo move end time
+bool SV1A;                  //Servo event 1 completion status
+bool SV1B;                  //Servo event 2 completion status
+unsigned long SV1TIME;      //offset appled to the difference of SVSTART and SVEND
+
+bool SV2STATE = false;
+bool SV2CHANGEEN;
+int SV2DEG = 0;
+unsigned long SV2START;
+unsigned long SV2END;
+bool SV2A;
+bool SV2B;
+unsigned long SV2TIME;
+
+bool SV3STATE = false;
+bool SV3CHANGEEN;
+int SV3DEG = 0;
+unsigned long SV3START;
+unsigned long SV3END;
+bool SV3A;
+bool SV3B;
+unsigned long SV3TIME;
+
+bool SV4STATE = false;
+bool SV4CHANGEEN;
+int SV4DEG = 0;
+unsigned long SV4START;
+unsigned long SV4END;
+bool SV4A;
+bool SV4B;
+unsigned long SV4TIME;
+
+bool SV5STATE = false;
+bool SV5CHANGEEN;
+int SV5DEG = 0;
+unsigned long SV5START;
+unsigned long SV5END;
+bool SV5A;
+bool SV5B;
+unsigned long SV5TIME;
+
+bool SV6STATE = false;
+bool SV6CHANGEEN;
+int SV6DEG = 0;
+unsigned long SV6START;
+unsigned long SV6END;
+bool SV6A;
+bool SV6B;
+unsigned long SV6TIME;
 
 void setup(){                   //all the functions that run once when the MCU us turned on
     Serial.begin(115200);       //start serial
-    pinMode(S1_S,OUTPUT);
-    pinMode(S1_D,OUTPUT);
-    pinMode(S2_S,OUTPUT);
-    pinMode(S2_D,OUTPUT);
-    pinMode(S3_S,OUTPUT);
-    pinMode(S3_D,OUTPUT);
-    pinMode(S4_S,OUTPUT);
-    pinMode(S4_D,OUTPUT);
-    pinMode(S5_S,OUTPUT);
-    pinMode(S5_D,OUTPUT);
-    pinMode(S6_S,OUTPUT);
-    pinMode(S6_D,OUTPUT);
-    servo1.attach(A5);
-    servo2.attach(A0);
-    servo3.attach(A4);
-    servo4.attach(A3);
-    servo5.attach(A2);
-    servo6.attach(A1);
+
+                            //set all stepper pins to output
+    pinMode(S1_S,OUTPUT);   //
+    pinMode(S1_D,OUTPUT);   //
+    pinMode(S2_S,OUTPUT);   //
+    pinMode(S2_D,OUTPUT);   //
+    pinMode(S3_S,OUTPUT);   //
+    pinMode(S3_D,OUTPUT);   //
+    pinMode(S4_S,OUTPUT);   //
+    pinMode(S4_D,OUTPUT);   //
+    pinMode(S5_S,OUTPUT);   //
+    pinMode(S5_D,OUTPUT);   //
+    pinMode(S6_S,OUTPUT);   //
+    pinMode(S6_D,OUTPUT);   //
+
+    servo1.attach(A5);      //attach servos to their pins
+    servo2.attach(A0);      //
+    servo3.attach(A4);      //
+    servo4.attach(A3);      //
+    servo5.attach(A2);      //
+    servo6.attach(A1);      //
+
     Serial.println("Serial link established");
 
     servo1.write(0);        //make sure all of the servos are locked in the 0 deg position
-    servo2.write(0);
-    servo3.write(0);
-    servo4.write(0);
-    servo5.write(0);
-    servo6.write(0);
+    servo2.write(0);        //
+    servo3.write(0);        //
+    servo4.write(0);        //
+    servo5.write(0);        //
+    servo6.write(0);        //
 }
 
 void loop(){
-    updateS1();
-    updateS2();
-    updateS3();
-    updateS4();
-    updateS5();
-    updateS6();
-    updateSV1();
+    updateS1();             //update the stepper position / status based on the last data 
+    updateS2();             //from serial commands
+    updateS3();             //
+    updateS4();             //
+    updateS5();             //
+    updateS6();             //
+
+    updateSV1();            //update the servo position / status based on the last data
+    updateSV2();            //from serial commands
+    updateSV3();            // 
+    updateSV4();            //
+    updateSV5();            //
+    updateSV6();            //
 }
 
-void serialEvent(){                                     //function that collects and parses the serial data
-    while(Serial.available()){
-        char inChar = (char)Serial.read();
-        incomingdata += inChar;
-        delayMicroseconds(150);                         //this delay has to be here to keep the data from not being broken up
+void serialEvent(){                                     //Function that gets serial data and updates the command variables
+    while(Serial.available()){                          //checks if serial is available
+        char inChar = (char)Serial.read();              //read the serial data
+        incomingdata += inChar;                         //add the serial data to the incoming data variable
+        delayMicroseconds(150);
     }
-    Serial.println(incomingdata);                       //find all the seperator locations
+    Serial.println(incomingdata);
     sep1 = incomingdata.indexOf(":");
     sep2 = incomingdata.indexOf(":",sep1+1);
     sep3 = incomingdata.indexOf(":",sep2+1);
     sep4 = incomingdata.indexOf(":",sep3+1);
     sep5 = incomingdata.indexOf(":",sep4+1);
     
-    motornum = incomingdata.substring(sep1+1,sep2);     //split the data based on the seperator locations
+    motornum = incomingdata.substring(sep1+1,sep2);
     motordir = incomingdata.substring(sep2+1,sep3);
     motortime = incomingdata.substring(sep3+1,sep4);
     motordist = incomingdata.substring(sep4+1,sep5);
@@ -254,8 +309,237 @@ void serialEvent(){                                     //function that collects
         SV1TIME = motortime.toInt() / diff;
     }
 
+    if(let_to_num(motornum) == 2+6){
+        SV2DEG = (motordist.toInt()/3)*2;
+        long diff = SV2DEG - pos[2];
+        diff = abs(diff);
+        SV2TIME = motortime.toInt() / diff;
+    }
+    if(let_to_num(motornum) == 3+6){
+        SV3DEG = (motordist.toInt()/3)*2;
+        long diff = SV3DEG - pos[3];
+        diff = abs(diff);
+        SV3TIME = motortime.toInt() / diff;
+    }
+    if(let_to_num(motornum) == 4+6){
+        SV4DEG = (motordist.toInt()/3)*2;
+        long diff = SV4DEG - pos[4];
+        diff = abs(diff);
+        SV4TIME = motortime.toInt() / diff;
+    }
+    if(let_to_num(motornum) == 5+6){
+        SV5DEG = (motordist.toInt()/3)*2;
+        long diff = SV5DEG - pos[5];
+        diff = abs(diff);
+        SV5TIME = motortime.toInt() / diff;
+    }
+    if(let_to_num(motornum) == 6+6){
+        SV6DEG = (motordist.toInt()/3)*2;
+        long diff = SV6DEG - pos[6];
+        diff = abs(diff);
+        SV6TIME = motortime.toInt() / diff;
+    }
+
     incomingdata = "";                                  //reset the incoming data variable
     actionready = true;                                 //set the action ready flag so the main loop knows there is a command to execute
+}
+
+void updateSV1(){
+    if(SV1STATE == false){
+        // Serial.println("update start");
+        SV1START = currentmicro();
+        SV1END = SV1START + SV1TIME * 1000;
+        // Serial.println((SV1TIME * 1000));
+        SV1STATE = true;
+        SV1A = false;
+        SV1B = false;
+        SV1CHANGEEN = true;
+    }
+
+    if(currentmicro() >= SV1START && currentmicro() <= SV1END && SV1A == false && SV1CHANGEEN == true){
+        if(pos[1] <= SV1DEG){
+            pos[1] = pos[1] + 1;
+            servo1.write(pos[1]);
+        }
+        if(pos[1] > SV1DEG){
+            pos[1] = pos[1] - 1;
+            servo1.write(pos[1]);
+        }
+        SV1CHANGEEN = false;
+        SV1A == true;
+    }
+
+    if(currentmicro() >= SV1END && SV1B == false){
+        SV1B == true;
+        SV1STATE = false;
+        // Serial.println("update end");
+        // Serial.println(pos[1]);
+    }
+}
+
+void updateSV2(){
+    if(SV2STATE == false){
+        // Serial.println("update start");
+        SV2START = currentmicro();
+        SV2END = SV2START + SV2TIME * 1000;
+        // Serial.println((SV1TIME * 1000));
+        SV2STATE = true;
+        SV2A = false;
+        SV2B = false;
+        SV2CHANGEEN = true;
+    }
+
+    if(currentmicro() >= SV2START && currentmicro() <= SV2END && SV2A == false && SV2CHANGEEN == true){
+        if(pos[2] <= SV2DEG){
+            pos[2] = pos[2] + 1;
+            servo2.write(pos[2]);
+        }
+        if(pos[2] > SV2DEG){
+            pos[2] = pos[2] - 1;
+            servo2.write(pos[2]);
+        }
+        SV2CHANGEEN = false;
+        SV2A == true;
+    }
+
+    if(currentmicro() >= SV2END && SV2B == false){
+        SV2B == true;
+        SV2STATE = false;
+        // Serial.println("update end");
+        // Serial.println(pos[2]);
+    }
+}
+
+void updateSV3(){
+    if(SV3STATE == false){
+        // Serial.println("update start");
+        SV3START = currentmicro();
+        SV3END = SV3START + SV3TIME * 1000;
+        // Serial.println((SV1TIME * 1000));
+        SV3STATE = true;
+        SV3A = false;
+        SV3B = false;
+        SV3CHANGEEN = true;
+    }
+
+    if(currentmicro() >= SV3START && currentmicro() <= SV3END && SV3A == false && SV3CHANGEEN == true){
+        if(pos[3] <= SV3DEG){
+            pos[3] = pos[3] + 1;
+            servo3.write(pos[3]);
+        }
+        if(pos[3] > SV3DEG){
+            pos[3] = pos[3] - 1;
+            servo3.write(pos[3]);
+        }
+        SV3CHANGEEN = false;
+        SV3A == true;
+    }
+
+    if(currentmicro() >= SV3END && SV3B == false){
+        SV3B == true;
+        SV3STATE = false;
+        // Serial.println("update end");
+        // Serial.println(pos[3]);
+    }
+}
+
+void updateSV4(){
+    if(SV4STATE == false){
+        // Serial.println("update start");
+        SV4START = currentmicro();
+        SV4END = SV4START + SV4TIME * 1000;
+        // Serial.println((SV1TIME * 1000));
+        SV4STATE = true;
+        SV4A = false;
+        SV4B = false;
+        SV4CHANGEEN = true;
+    }
+
+    if(currentmicro() >= SV4START && currentmicro() <= SV4END && SV4A == false && SV4CHANGEEN == true){
+        if(pos[4] <= SV4DEG){
+            pos[4] = pos[4] + 1;
+            servo4.write(pos[4]);
+        }
+        if(pos[4] > SV4DEG){
+            pos[4] = pos[4] - 1;
+            servo4.write(pos[4]);
+        }
+        SV4CHANGEEN = false;
+        SV4A == true;
+    }
+
+    if(currentmicro() >= SV4END && SV4B == false){
+        SV4B == true;
+        SV4STATE = false;
+        // Serial.println("update end");
+        // Serial.println(pos[4]);
+    }
+}
+
+void updateSV5(){
+    if(SV5STATE == false){
+        // Serial.println("update start");
+        SV5START = currentmicro();
+        SV5END = SV5START + SV5TIME * 1000;
+        // Serial.println((SV1TIME * 1000));
+        SV5STATE = true;
+        SV5A = false;
+        SV5B = false;
+        SV5CHANGEEN = true;
+    }
+
+    if(currentmicro() >= SV5START && currentmicro() <= SV5END && SV5A == false && SV5CHANGEEN == true){
+        if(pos[5] <= SV5DEG){
+            pos[5] = pos[5] + 1;
+            servo5.write(pos[5]);
+        }
+        if(pos[5] > SV5DEG){
+            pos[5] = pos[5] - 1;
+            servo5.write(pos[5]);
+        }
+        SV5CHANGEEN = false;
+        SV5A == true;
+    }
+
+    if(currentmicro() >= SV5END && SV5B == false){
+        SV5B == true;
+        SV5STATE = false;
+        // Serial.println("update end");
+        // Serial.println(pos[5]);
+    }
+}
+
+void updateSV6(){
+    if(SV6STATE == false){
+        // Serial.println("update start");
+        SV6START = currentmicro();
+        SV6END = SV6START + SV6TIME * 1000;
+        // Serial.println((SV1TIME * 1000));
+        SV6STATE = true;
+        SV6A = false;
+        SV6B = false;
+        SV6CHANGEEN = true;
+    }
+
+    if(currentmicro() >= SV6START && currentmicro() <= SV6END && SV6A == false && SV6CHANGEEN == true){
+        if(pos[6] <= SV6DEG){
+            pos[6] = pos[6] + 1;
+            servo6.write(pos[6]);
+        }
+        if(pos[6] > SV6DEG){
+            pos[6] = pos[6] - 1;
+            servo6.write(pos[6]);
+        }
+        SV6CHANGEEN = false;
+        SV6A == true;
+    }
+
+    if(currentmicro() >= SV6END && SV6B == false){
+        SV6B == true;
+        SV6STATE = false;
+        // Serial.println("update end");
+        // Serial.println(pos[6]);
+    }
 }
 
 void updateS1(){
@@ -295,42 +579,6 @@ void updateS1(){
         }
     }
 }
-
-
-void updateSV1(){
-    if(SV1STATE == false){
-        // Serial.println("update start");
-        SV1START = currentmicro();
-        SV1END = SV1START + SV1TIME * 1000;
-        // Serial.println((SV1TIME * 1000));
-        SV1STATE = true;
-        SV1A = false;
-        SV1B = false;
-        SV1CHANGEEN = true;
-    }
-
-    if(currentmicro() >= SV1START && currentmicro() <= SV1END && SV1A == false && SV1CHANGEEN == true){
-        if(pos[1] <= SV1DEG){
-            pos[1] = pos[1] + 1;
-            servo1.write(pos[1]);
-        }
-        if(pos[1] > SV1DEG){
-            pos[1] = pos[1] - 1;
-            servo1.write(pos[1]);
-        }
-        SV1CHANGEEN = false;
-        SV1A == true;
-    }
-
-    if(currentmicro() >= SV1END && SV1B == false){
-        SV1B == true;
-        SV1STATE = false;
-        // Serial.println("update end");
-        Serial.println(pos[1]);
-    }
-}
-
-
 
 void updateS2(){
     if(S2ST2D > S2STPC){
