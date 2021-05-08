@@ -97,47 +97,13 @@ int S6STPC = 0;
 int S6ST2D = 0;
 
 bool SV1STATE = false;
+bool SV1CHANGEEN;
 int SV1DEG = 0;
 unsigned long SV1START;
 unsigned long SV1END;
 bool SV1A;
 bool SV1B;
 int SV1TIME;
-
-bool SV2STATE = false;
-int SV2DEG = 0;
-unsigned long SV2START;
-unsigned long SV2END;
-bool SV2A;
-bool SV2B;
-
-bool SV3STATE = false;
-int SV3DEG = 0;
-unsigned long SV3START;
-unsigned long SV3END;
-bool SV3A;
-bool SV3B;
-
-bool SV4STATE = false;
-int SV4DEG = 0;
-unsigned long SV4START;
-unsigned long SV4END;
-bool SV4A;
-bool SV4B;
-
-bool SV5STATE = false;
-int SV5DEG = 0;
-unsigned long SV5START;
-unsigned long SV5END;
-bool SV5A;
-bool SV5B;
-
-bool SV6STATE = false;
-int SV6DEG = 0;
-unsigned long SV6START;
-unsigned long SV6END;
-bool SV6A;
-bool SV6B;
 
 void setup(){                   //all the functions that run once when the MCU us turned on
     Serial.begin(115200);       //start serial
@@ -338,16 +304,19 @@ void updateSV1(){
         SV1STATE = true;
         SV1A = false;
         SV1B = false;
+        SV1CHANGEEN = true;
     }
 
     if(currentmicro() >= SV1START && currentmicro() <= SV1END && SV1A == false){
         if(pos[1] <= SV1DEG){
             pos[1] = pos[1] + 1;
             servo1.write(pos[1]);
+            SV1CHANGEEN = false;
         }
         if(pos[1] > SV1DEG){
             pos[1] = pos[1] - 1;
             servo1.write(pos[1]);
+            SV1CHANGEEN = false;
         }
         SV1A == true;
     }
