@@ -4,6 +4,10 @@
 #include<Servo.h>
 #include "pinmapping.h"
 
+/* -------------------------------------------------------------------------- */
+/*                          GENERIC GLOBAL VARIABLES                          */
+/* -------------------------------------------------------------------------- */
+
 int speed = 500;        //global speed of stepper motor step time
 
 String motornum;        //what number motor we are operating
@@ -23,6 +27,11 @@ int sep1,sep2,sep3,sep4,sep5;   //all the seperating locations used to split up 
 String incomingdata = "";       //string that holds the incoming data from the serial port
 
 int pos[] = {0,0,0,0,0,0,0};    //array to store all the servo positions
+
+
+/* -------------------------------------------------------------------------- */
+/*                       STEPPER MOTOR WORKING VARIABLES                      */
+/* -------------------------------------------------------------------------- */
 
 unsigned long S1SPDOFF;         //stepper speed offset
 unsigned long S1START;          //stepper start time
@@ -96,6 +105,10 @@ bool S6DIR;
 int S6STPC = 0;
 int S6ST2D = 0;
 
+/* -------------------------------------------------------------------------- */
+/*                           SERVO WORKING VARIABLES                          */
+/* -------------------------------------------------------------------------- */
+
 bool SV1STATE = false;      //state of the Servo motor
 bool SV1CHANGEEN;           //Enable a degree state change for the next check
 int SV1DEG = 0;             //Requested servo angle
@@ -150,6 +163,10 @@ bool SV6A;
 bool SV6B;
 unsigned long SV6TIME;
 
+/* -------------------------------------------------------------------------- */
+/*                                PROGRAM SETUP                               */
+/* -------------------------------------------------------------------------- */
+
 void setup(){                   //all the functions that run once when the MCU us turned on
     Serial.begin(115200);       //start serial
 
@@ -184,6 +201,10 @@ void setup(){                   //all the functions that run once when the MCU u
     servo6.write(0);        //
 }
 
+/* -------------------------------------------------------------------------- */
+/*                              MAIN PROGRAM LOOP                             */
+/* -------------------------------------------------------------------------- */
+
 void loop(){
     updateS1();             //update the stepper position / status based on the last data 
     updateS2();             //from serial commands
@@ -200,45 +221,50 @@ void loop(){
     updateSV6();            //
 }
 
+/* -------------------------------------------------------------------------- */
+/*                           SERIAL EVENT DETECTION                           */
+/* -------------------------------------------------------------------------- */
+
 void serialEvent(){                                     //Function that gets serial data and updates the command variables
     while(Serial.available()){                          //checks if serial is available
         char inChar = (char)Serial.read();              //read the serial data
         incomingdata += inChar;                         //add the serial data to the incoming data variable
-        delayMicroseconds(150);
+        delayMicroseconds(150);                         //delay so that the serial data does not get broken up
     }
-    Serial.println(incomingdata);
-    sep1 = incomingdata.indexOf(":");
-    sep2 = incomingdata.indexOf(":",sep1+1);
-    sep3 = incomingdata.indexOf(":",sep2+1);
-    sep4 = incomingdata.indexOf(":",sep3+1);
-    sep5 = incomingdata.indexOf(":",sep4+1);
+    //Serial.println(incomingdata);                     //print the incoming data
+
+    sep1 = incomingdata.indexOf(":");                   //set the position of all 5 seperators
+    sep2 = incomingdata.indexOf(":",sep1+1);            //
+    sep3 = incomingdata.indexOf(":",sep2+1);            //
+    sep4 = incomingdata.indexOf(":",sep3+1);            //
+    sep5 = incomingdata.indexOf(":",sep4+1);            //
     
-    motornum = incomingdata.substring(sep1+1,sep2);
-    motordir = incomingdata.substring(sep2+1,sep3);
-    motortime = incomingdata.substring(sep3+1,sep4);
-    motordist = incomingdata.substring(sep4+1,sep5);
+    motornum = incomingdata.substring(sep1+1,sep2);     //set the motor number from the serial data
+    motordir = incomingdata.substring(sep2+1,sep3);     //set the motor direction from the serial data (applies only to steppers)
+    motortime = incomingdata.substring(sep3+1,sep4);    //sets the desired time for action to take from serial data
+    motordist = incomingdata.substring(sep4+1,sep5);    //sets the desired motor distance in degrees from serial data
 
-    if(let_to_num(motornum) == 1){
-        S1STPC = 0;
-        S1ST2D = 0;
-        S1ST2D = calcsteps(motordist.toInt());
-        S1SPDOFF = calcspeed(S1ST2D);
-        if(motordir == "F"){
-            S1DIR = true;
-        }
+    if(let_to_num(motornum) == 1){                      //check what the desired motor number is and if its a stepper based on alpha serial data
+        S1STPC = 0;                                     //set the stepper motor current step counter to 0
+        S1ST2D = 0;                                     //set the stepper motor steps to do counter to 0
+        S1ST2D = calcsteps(motordist.toInt());          //set the stepper motor steps to do to the number of steps calculated by the degrees in serial data
+        S1SPDOFF = calcspeed(S1ST2D);                   //calculate and set the speed offset to make stepper arrived at desired time
+        if(motordir == "F"){                            //check the desired motor directon
+            S1DIR = true;                               //set the direction to true if the desired direction is forwards
+        }                               
         
-        if(motordir == "B"){
-            S1DIR = false;
+        if(motordir == "B"){                            //check the desired motor direction
+            S1DIR = false;                              //set the direction to false if the desired direction is backwards
         }
     }
 
-    if(let_to_num(motornum) == 2){
-        S2STPC = 0;
-        S2ST2D = 0;
-        S2ST2D = calcsteps(motordist.toInt());
-        S2SPDOFF = calcspeed(S2ST2D);
-        if(motordir == "F"){
-            S2DIR = true;
+    if(let_to_num(motornum) == 2){                      //same function as above
+        S2STPC = 0;                                     //
+        S2ST2D = 0;                                     //
+        S2ST2D = calcsteps(motordist.toInt());          //
+        S2SPDOFF = calcspeed(S2ST2D);                   //
+        if(motordir == "F"){                            //
+            S2DIR = true;                               //
         }
         
         if(motordir == "B"){
