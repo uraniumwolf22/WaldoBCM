@@ -51,7 +51,7 @@ def motorMove(pos, dir, time, step):
         command = (':'+':'.join([pos, dir, time, step])+':')
         print(command)
         port.write(command.encode())
-        sleep(int(time)/1000)  # port.read_until('X'.encode())
+        # port.read_until('X'.encode())
 
     except serial.serialutil.SerialTimeoutException: print('Timed out!')
 
@@ -69,5 +69,7 @@ while True:
 
     if event == 'F':
         for i in motors: motorMove(i, 'F', time, step)
+        sleep(int(time)/1000)
     if event == 'B':
         for i in motors: motorMove(i, 'B', time, step)
+        sleep(int(time)/1000)
