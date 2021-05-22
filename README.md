@@ -1,27 +1,21 @@
-# WaldoBCM
-# PYTHON SERVER
+#Waldo Hexapod
 
+This site contains all the code for the Waldo robot.
 
-Required python packages:
+Test python GUI is located in the Python folder.
+You can locate the C firmware for the ATMEL 328P.
+You can locate the lidar software in LiDar System.
 
--Pyserial
--PySimpleGUI
+#Hardware
 
+The hardware schematics can be found in schematics as well as a full PCB layout
+The chip used as the BCM needs to be atleast 8MHZ with 2K of RAM 4K would be best
+Main board input voltage needs to be ~24V not below 16V and no more than 26V.
+Active cooling on the stepper motor chips and the servo VRMs is needed
 
-
-# BCM Firmware
-
-Movement commands are as follows.
-
-S A A F
-
-1 `MOTOR TYPE`: Defines the type of motor,  __S__ for Stepper or __V__ for Servo.
-
-2 `MOTOR NUMBER`: Defines which motor to control, A-F coorospond to different motors on the BCM.
-
-3 `MOTOR RESOLUTION`: Defines the motor resolution.  Only applies to steppers and can be A - D or 1,5,10,100 steps.
-
-4 `MOTOR DIRECTION`: Defines which direction the motors should be moving.  F for forward and B for Backwards.
-
-Note: BCM Will send the character X when the move has been completed across serial.
-:trollface: 🍆
+#Known issues
+--Arduino resets on COM initiation needs to have a 20uf capacitor from reset to ground to prevent this.
+--After 70 minutes the micros register will overflow and set to 0 potentially breaking the operation the bot
+is currently on
+--CAPS NEED TO BE 24V NOT 16V OR YOUR EARS WILL REGRET IT
+--Steppers always have holding torque
