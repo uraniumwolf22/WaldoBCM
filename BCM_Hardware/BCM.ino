@@ -15,13 +15,6 @@ String motordir;        //motor direction
 String motortime;       //how long the motor should take to do the operation
 String motordist;       //how far the motor is traveling in degrees
 
-int motor_;             //motor number working var
-int direction_;         //direction working var
-int servonum;           //servo num working var
-int servodeg_;          //servo degrees working var
-int servotime_;         //servo time to complete working var
-
-bool actionready = false;       //Variable that tells the main loop if a serial command is ready to execute
 int sep1,sep2,sep3,sep4,sep5;   //all the seperating locations used to split up serial command
 
 String incomingdata = "";       //string that holds the incoming data from the serial port
@@ -190,9 +183,6 @@ void setup(){                   //all the functions that run once when the MCU u
     servo4.attach(A3);      //
     servo5.attach(A2);      //
     servo6.attach(A1);      //
-
-    Serial.println("Serial link established");
-
     servo1.write(0);        //make sure all of the servos are locked in the 0 deg position
     servo2.write(0);        //
     servo3.write(0);        //
@@ -333,11 +323,11 @@ void serialEvent(){                                     //Function that gets ser
     }
 
 /* -------------------------------------------------------------------------- */
-/*                           SET SERVO WORKING VARS                           */
+/*                         SET WORKING VARS FOR SERVOS                        */
 /* -------------------------------------------------------------------------- */
 
     if(let_to_num(motornum) == 1+6){
-        SV1DEG = (motordist.toInt()/3)*2;
+        SV1DEG = (motordist.toInt()/3)*2;   //Servos are 270 deg servos while the library is 180 based to compensate we have to calculate 2/3 of the desired angle 
         long diff = SV1DEG - pos[1];
         diff = abs(diff);
         SV1TIME = motortime.toInt() / diff;
@@ -375,11 +365,10 @@ void serialEvent(){                                     //Function that gets ser
     }
 
     incomingdata = "";                                  //reset the incoming data variable
-    actionready = true;                                 //set the action ready flag so the main loop knows there is a command to execute
 }
 
 /* -------------------------------------------------------------------------- */
-/*                     FUNCTIONS TO UPDATE STEPPER MOTORS                     */
+/*                         FUNCTIONS TO UPDATE SERVOS                         */
 /* -------------------------------------------------------------------------- */
 
 void updateSV1(){                                       //function to update the stepper motor state
@@ -579,6 +568,10 @@ void updateSV6(){
         // Serial.println(pos[6]);
     }
 }
+
+/* -------------------------------------------------------------------------- */
+/*                       UPDATE STEPPER MOTOR FUNCTIONS                       */
+/* -------------------------------------------------------------------------- */
 
 void updateS1(){
     if(S1ST2D > S1STPC){
@@ -808,6 +801,9 @@ void updateS6(){
     }
 }
 
+/* -------------------------------------------------------------------------- */
+/*                              UTILITY FUNCTIONS                             */
+/* -------------------------------------------------------------------------- */
 
 int let_to_num(String motorNumber){     //function to convert the motor letter to the motor number
     int motor;
