@@ -20,4 +20,4 @@ def server():
   c.close()
 
 if __name__ == '__main__':
-server()
+    server()
