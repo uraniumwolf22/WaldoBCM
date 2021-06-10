@@ -1,7 +1,7 @@
 import socket
 
 def server():
-  host = "10.1.10.185"   # get local machine name
+  host = '0.0.0.0'   # get local machine name
   port = 8080  # Make sure it's within the > 1024 $$ <65535 range
   
   s = socket.socket()
