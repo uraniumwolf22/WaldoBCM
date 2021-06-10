@@ -19,5 +19,5 @@ def server():
     c.send(data.encode('utf-8'))
   c.close()
 
-if __name__ = '__main__':
+if __name__ == '__main__':
 server()
