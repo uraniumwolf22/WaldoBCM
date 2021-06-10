@@ -34,7 +34,8 @@ print('Connected by', addr)
 while 1:
     data = conn.recv(8192)
     if not data: break
-    scan = json.loads(data)
+    s.sendto('success'.encode(), addr)
+    scan = json.loads(data.decode())
 
     deg = []
     dist = []
