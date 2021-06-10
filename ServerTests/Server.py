@@ -22,15 +22,16 @@ def update(deg, dist, line):
     return line,
 
 
-HOST = '0.0.0.0'                 # Symbolic name meaning all available interfaces
+HOST = '0.0.0.0'         # Symbolic name meaning all available interfaces
 PORT = 8000              # Arbitrary non-privileged port
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
 s.listen(1)
 conn, addr = s.accept()
 print('Connected by', addr)
+
 while 1:
-    data = conn.recv(1024)
+    data = conn.recv(8192)
     if not data: break
     scan = eval(data.decode())
 
