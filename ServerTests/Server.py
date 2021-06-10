@@ -32,10 +32,11 @@ print('Connected by', addr)
 while 1:
     data = conn.recv(1024)
     if not data: break
+    scan = eval(data.decode())
 
     deg = []
     dist = []
-    for i in data:
+    for i in scan:
         deg.append(math.radians(i[1]))
         dist.append(i[2])
     line, = update(deg, dist, line)
