@@ -2,6 +2,7 @@ import socket
 import matplotlib.pyplot as plt
 import math
 import json
+import base64
 
 plt.style.use('ggplot')
 plt.ion()
@@ -18,7 +19,7 @@ def update(deg, dist, line):
     line.set_data(deg, dist)
     fig.gca().relim()
     fig.gca().autoscale_view()
-    ax.fill(deg, dist, 'r', alpha=0.5)
+    ax.fill(deg, dist, alpha=0.5)
     plt.pause(0.001)
     return line,
 
@@ -32,10 +33,11 @@ conn, addr = s.accept()
 print('Connected by', addr)
 
 while 1:
-    data = conn.recv(8192)
+    data = conn.recv(16384)
     if not data: break
-    s.sendto('success'.encode(), addr)
-    scan = json.loads(data.decode())
+    # conn.sendto('success'.encode(), addr)
+    try: scan = json.loads(data.decode())
+    except json.decoder.JSONDecodeError: continue
 
     deg = []
     dist = []
@@ -43,6 +45,6 @@ while 1:
         deg.append(math.radians(i[1]))
         dist.append(i[2])
     line, = update(deg, dist, line)
-    print(deg, dist)
+    #print(deg, dist)
 # print(data.decode())
 conn.close()
