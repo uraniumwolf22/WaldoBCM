@@ -1,23 +1,14 @@
 import socket
 
-def server():
-  host = '0.0.0.0'   # get local machine name
-  port = 8080  # Make sure it's within the > 1024 $$ <65535 range
-  
-  s = socket.socket()
-  s.bind((host, port))
-  
-  s.listen(1)
-  client_socket, adress = s.accept()
-  print("Connection from: " + str(addr))
-  while True:
-    data = c.recv(1024).decode('utf-8')
-    if not data:
-      break
-    print('From online user: ' + data)
-    data = data.upper()
-    c.send(data.encode('utf-8'))
-  c.close()
-
-if __name__ == '__main__':
-    server()
+HOST = '0.0.0.0'                 # Symbolic name meaning all available interfaces
+PORT = 50007              # Arbitrary non-privileged port
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((HOST, PORT))
+s.listen(1)
+conn, addr = s.accept()
+print('Connected by', addr)
+while 1:
+    data = conn.recv(1024)
+    if not data: break
+    conn.sendall(data)
+conn.close()

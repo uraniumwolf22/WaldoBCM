@@ -1,17 +1,8 @@
-import socket
-
-def client():
-  host = "10.1.10.52"  # get local machine name
-  port = 8080  # Make sure it's within the > 1024 $$ <65535 range
-  
-  s = socket.socket()
-  s.connect((host, port))
-  
-  message = input('-> ')
-  while message != 'q':
-    s.send(message.encode('utf-8'))
-    message = input('==> ')
-  s.close()
-
-if __name__ == '__main__':
-  client()
+HOST = '10.1.10.52'    # The remote host
+PORT = 50007              # The same port as used by the server
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((HOST, PORT))
+s.sendall('Hello, world')
+data = s.recv(1024)
+s.close()
+print('Received', repr(data))
