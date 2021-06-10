@@ -1,6 +1,7 @@
 import socket
 import matplotlib.pyplot as plt
 import math
+import json
 
 plt.style.use('ggplot')
 plt.ion()
@@ -33,7 +34,7 @@ print('Connected by', addr)
 while 1:
     data = conn.recv(8192)
     if not data: break
-    scan = eval(data.decode())
+    scan = json.loads(data)
 
     deg = []
     dist = []

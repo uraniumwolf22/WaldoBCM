@@ -1,5 +1,6 @@
 import socket
 from rplidar import RPLidar
+import json
 
 HOST = 'rossnation.ddns.net'    # The remote host
 PORT = 8000            # The same port as used by the server
@@ -12,6 +13,6 @@ print(liport.get_health())
 
 for scan in liport.iter_scans(scan_type='express'):
     print(scan)
-    s.sendall(str(scan).encode())
+    s.sendall(json.dumps(scan))
 
 s.close()
