@@ -1,4 +1,26 @@
 import socket
+import matplotlib.pyplot as plt
+import math
+
+plt.style.use('ggplot')
+plt.ion()
+
+deg = []
+dist = []
+fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
+line, = ax.plot(deg, dist)
+plt.title('Spinny Laser')
+plt.show()
+
+def update(deg, dist, line):
+    plt.cla()
+    line.set_data(deg, dist)
+    fig.gca().relim()
+    fig.gca().autoscale_view()
+    ax.fill(deg, dist, 'r', alpha=0.5)
+    plt.pause(0.001)
+    return line,
+
 
 HOST = '0.0.0.0'                 # Symbolic name meaning all available interfaces
 PORT = 8000              # Arbitrary non-privileged port
@@ -10,5 +32,13 @@ print('Connected by', addr)
 while 1:
     data = conn.recv(1024)
     if not data: break
-    print(data.decode())
+
+    deg = []
+    dist = []
+    for i in data:
+        deg.append(math.radians(i[1]))
+        dist.append(i[2])
+    line, = update(deg, dist, line)
+    print(deg, dist)
+# print(data.decode())
 conn.close()
