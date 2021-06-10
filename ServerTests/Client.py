@@ -1,7 +1,7 @@
 import socket
 
 def client():
-  host = 10.1.10.52  # get local machine name
+  host = "10.1.10.52"  # get local machine name
   port = 8080  # Make sure it's within the > 1024 $$ <65535 range
   
   s = socket.socket()
@@ -10,8 +10,6 @@ def client():
   message = input('-> ')
   while message != 'q':
     s.send(message.encode('utf-8'))
-    data = s.recv(1024).decode('utf-8')
-    print('Received from server: ' + data)
     message = input('==> ')
   s.close()
 
