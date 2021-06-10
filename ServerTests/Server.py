@@ -10,5 +10,5 @@ print('Connected by', addr)
 while 1:
     data = conn.recv(1024)
     if not data: break
-    conn.sendall(data)
+    print(data.decode())
 conn.close()
