@@ -48,7 +48,6 @@ def get_lidar_data():
         line, = update(deg, dist, line)
         #print(deg, dist)
     # print(data.decode())
-    conn.close()
 
 LidarData = threading.Thread(target=get_lidar_data, daemon=True)
 LidarData.start()
