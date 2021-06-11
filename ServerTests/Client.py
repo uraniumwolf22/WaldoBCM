@@ -15,6 +15,6 @@ for scan in liport.iter_scans(scan_type='express'):
     # print(scan)
     s.sendall(json.dumps(scan).encode())
     # response = s.recv(1024)
-    # print(response.decode())
+    # print(response.decode())a
 
 s.close()

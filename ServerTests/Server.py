@@ -48,7 +48,7 @@ while 1:
     try: scan = json.loads(data.decode())
     except json.decoder.JSONDecodeError: continue
 
-    loc.sendall(json.dumps(scan).encode())
+    conn2.sendall(json.dumps(scan).encode())
 
     deg = []
     dist = []
