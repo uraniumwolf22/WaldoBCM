@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import math
 import json
 import base64
+import threading
 
 plt.style.use('ggplot')
 plt.ion()
@@ -31,20 +32,23 @@ s.bind((HOST, PORT))
 s.listen(1)
 conn, addr = s.accept()
 print('Connected by', addr)
+def get_lidar_data():
+    while 1:
+        data = conn.recv(16384)
+        if not data: break
+        # conn.sendto('success'.encode(), addr)
+        try: scan = json.loads(data.decode())
+        except json.decoder.JSONDecodeError: continue
 
-while 1:
-    data = conn.recv(16384)
-    if not data: break
-    # conn.sendto('success'.encode(), addr)
-    try: scan = json.loads(data.decode())
-    except json.decoder.JSONDecodeError: continue
+        deg = []
+        dist = []
+        for i in scan:
+            deg.append(math.radians(i[1]))
+            dist.append(i[2])
+        line, = update(deg, dist, line)
+        #print(deg, dist)
+    # print(data.decode())
+    conn.close()
 
-    deg = []
-    dist = []
-    for i in scan:
-        deg.append(math.radians(i[1]))
-        dist.append(i[2])
-    line, = update(deg, dist, line)
-    #print(deg, dist)
-# print(data.decode())
-conn.close()
+LidarData = threading.Thread(target=get_lidar_data, daemon=True)
+LidarData.start()
