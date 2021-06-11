@@ -7,7 +7,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
 
 while 1:
-    data = loc.recv(16384)
+    data = s.recv(16384)
     if not data: break
     # conn.sendto('success'.encode(), addr)
     try: scan = json.loads(data.decode())
