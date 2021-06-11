@@ -32,20 +32,31 @@ s.bind((HOST, PORT))
 s.listen(1)
 conn, addr = s.accept()
 print('Connected by', addr)
-def get_lidar_data():
-    while 1:
-        data = conn.recv(16384)
-        if not data: break
-        # conn.sendto('success'.encode(), addr)
-        try: scan = json.loads(data.decode())
-        except json.decoder.JSONDecodeError: continue
 
-        deg = []
-        dist = []
-        for i in scan:
-            deg.append(math.radians(i[1]))
-            dist.append(i[2])
-        line, = update(deg, dist, line)
-        #print(deg, dist)
-    # print(data.decode())
-    conn.close()
+HOSTLOCAL = 'localhost'
+PORTOUT = 8001
+loc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+loc.bind((HOSTLOCAL, PORTOUT))
+loc.listen(1)
+conn2, addr2 = loc.accept()
+print("Connected to",addr2)
+
+while 1:
+    data = conn.recv(16384)
+    if not data: break
+    # conn.sendto('success'.encode(), addr)
+    try: scan = json.loads(data.decode())
+    except json.decoder.JSONDecodeError: continue
+
+    loc.sendall(json.dumps(scan).encode())
+
+    deg = []
+    dist = []
+    for i in scan:
+        deg.append(math.radians(i[1]))
+        dist.append(i[2])
+    line, = update(deg, dist, line)
+    #print(deg, dist)
+# print(data.decode())
+
+conn.close()
