@@ -857,7 +857,7 @@ unsigned long calcspeed(int steps_){
 
     unsigned long speedoffset;                            //calculate the offset to achieve desired stepper time
     long requestedspeed = motortime.toInt();            //convert the offset time to a long so we can work with numbers over 36000
-    speedoffset = ((requestedspeed - (steps_ * ((speed * 2)/1000)))/steps_);    //calculate the offset based on current working variables
+    speedoffset = 2 * ((requestedspeed * 500) - (steps_ * speed)) / steps_;    //calculate the offset based on current working variables
     if(speedoffset < 0){                                //if the offset is smaller than the minumum required time make the offset 0 aka max speed
         speedoffset = 0;
     }
