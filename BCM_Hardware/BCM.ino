@@ -248,12 +248,12 @@ void serialEvent(){                                     //Function that gets ser
             S1DIR = true;                               //set the direction to true if the desired direction is forwards
         }                               
         
-        if(motordir == "B"){                            //check the desired motor direction
+        else if(motordir == "B"){                            //check the desired motor direction
             S1DIR = false;                              //set the direction to false if the desired direction is backwards
         }
     }
 
-    if(let_to_num(motornum) == 2){                      //same function as above
+    else if(let_to_num(motornum) == 2){                      //same function as above
         S2STPC = 0;                                     //
         S2ST2D = 0;                                     //
         S2ST2D = calcsteps(motordist.toInt());          //
@@ -262,12 +262,12 @@ void serialEvent(){                                     //Function that gets ser
             S2DIR = true;                               //
         }
         
-        if(motordir == "B"){
+        else if(motordir == "B"){
             S2DIR = false;
         }
     }
 
-    if(let_to_num(motornum) == 3){
+    else if(let_to_num(motornum) == 3){
         S3STPC = 0;
         S3ST2D = 0;
         S3ST2D = calcsteps(motordist.toInt());
@@ -276,12 +276,12 @@ void serialEvent(){                                     //Function that gets ser
             S3DIR = true;
         }
         
-        if(motordir == "B"){
+        else if(motordir == "B"){
             S3DIR = false;
         }
     }
 
-    if(let_to_num(motornum) == 4){
+    else if(let_to_num(motornum) == 4){
         S4STPC = 0;
         S4ST2D = 0;
         S4ST2D = calcsteps(motordist.toInt());
@@ -290,12 +290,12 @@ void serialEvent(){                                     //Function that gets ser
             S4DIR = true;
         }
         
-        if(motordir == "B"){
+        else if(motordir == "B"){
             S4DIR = false;
         }
     }
 
-    if(let_to_num(motornum) == 5){
+    else if(let_to_num(motornum) == 5){
         S5STPC = 0;
         S5ST2D = 0;
         S5ST2D = calcsteps(motordist.toInt());
@@ -304,12 +304,12 @@ void serialEvent(){                                     //Function that gets ser
             S5DIR = true;
         }
         
-        if(motordir == "B"){
+        else if(motordir == "B"){
             S5DIR = false;
         }
     }
 
-    if(let_to_num(motornum) == 6){
+    else if(let_to_num(motornum) == 6){
         S6STPC = 0;
         S6ST2D = 0;
         S6ST2D = calcsteps(motordist.toInt());
@@ -318,7 +318,7 @@ void serialEvent(){                                     //Function that gets ser
             S6DIR = true;
         }
         
-        if(motordir == "B"){
+        else if(motordir == "B"){
             S6DIR = false;
         }
     }
@@ -334,31 +334,31 @@ void serialEvent(){                                     //Function that gets ser
         SV1TIME = motortime.toInt() / diff;
     }
 
-    if(let_to_num(motornum) == 2+6){
+    else if(let_to_num(motornum) == 2+6){
         SV2DEG = (motordist.toInt()/3)*2;
         long diff = SV2DEG - pos[2];
         diff = abs(diff);
         SV2TIME = motortime.toInt() / diff;
     }
-    if(let_to_num(motornum) == 3+6){
+    else if(let_to_num(motornum) == 3+6){
         SV3DEG = (motordist.toInt()/3)*2;
         long diff = SV3DEG - pos[3];
         diff = abs(diff);
         SV3TIME = motortime.toInt() / diff;
     }
-    if(let_to_num(motornum) == 4+6){
+    else if(let_to_num(motornum) == 4+6){
         SV4DEG = (motordist.toInt()/3)*2;
         long diff = SV4DEG - pos[4];
         diff = abs(diff);
         SV4TIME = motortime.toInt() / diff;
     }
-    if(let_to_num(motornum) == 5+6){
+    else if(let_to_num(motornum) == 5+6){
         SV5DEG = (motordist.toInt()/3)*2;
         long diff = SV5DEG - pos[5];
         diff = abs(diff);
         SV5TIME = motortime.toInt() / diff;
     }
-    if(let_to_num(motornum) == 6+6){
+    else if(let_to_num(motornum) == 6+6){
         SV6DEG = (motordist.toInt()/3)*2;
         long diff = SV6DEG - pos[6];
         diff = abs(diff);
@@ -811,37 +811,37 @@ int let_to_num(String motorNumber){     //function to convert the motor letter t
     if (motorNumber == "A"){
         motor = 1;
     }
-    if (motorNumber == "B"){
+    else if (motorNumber == "B"){
         motor = 2;
     }
-    if (motorNumber == "C"){
+    else if (motorNumber == "C"){
         motor = 3;
     }
-    if (motorNumber == "D"){
+    else if (motorNumber == "D"){
         motor = 4;
     }
-    if (motorNumber == "E"){
+    else if (motorNumber == "E"){
         motor = 5;
     }
-    if (motorNumber == "F"){
+    else if (motorNumber == "F"){
         motor = 6;
     }
-    if (motorNumber == "G"){
+    else if (motorNumber == "G"){
         motor = 7;
     }
-    if (motorNumber == "H"){
+    else if (motorNumber == "H"){
         motor = 8;
     }
-    if (motorNumber == "I"){
+    else if (motorNumber == "I"){
         motor = 9;
     }
-    if (motorNumber == "J"){
+    else if (motorNumber == "J"){
         motor = 10;
     }
-    if (motorNumber == "K"){
+    else if (motorNumber == "K"){
         motor = 11;
     }
-    if (motorNumber == "L"){
+    else if (motorNumber == "L"){
         motor = 12;
     }
     return motor;
