@@ -192,11 +192,7 @@ void setup(){                   //all the functions that run once when the MCU u
     servo6.write(0);        //
 }
 
-/* -------------------------------------------------------------------------- */
-/*                              MAIN PROGRAM LOOP                             */
-/* -------------------------------------------------------------------------- */
-
-void loop(){
+void UpdateMotors(){
     updateS1();             //update the stepper position / status based on the last data 
     updateS2();             //from serial commands
     updateS3();             //
@@ -210,6 +206,18 @@ void loop(){
     updateSV4();            //
     updateSV5();            //
     updateSV6();            //
+}
+
+
+
+
+
+/* -------------------------------------------------------------------------- */
+/*                              MAIN PROGRAM LOOP                             */
+/* -------------------------------------------------------------------------- */
+
+void loop(){
+    UpdateMotors();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -774,7 +782,7 @@ void updateS6(){
             S6A = false;
             S6B = false;
             S6C = false;
-        }
+        }.
 
         if(currentmicro() >= S6START && currentmicro() <= S6MID && S6A == false){
             if(S6DIR == true){
@@ -783,7 +791,7 @@ void updateS6(){
 
             if(S6DIR == false){
                 digitalWrite(S6_D,LOW);
-            }
+            }||
 
             digitalWrite(S6_S,HIGH);
             S6A = true;
