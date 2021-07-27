@@ -193,6 +193,11 @@ void setup(){                   //all the functions that run once when the MCU u
     servo6.write(0);        //
 }
 
+
+/* -------------------------------------------------------------------------- */
+/*                              MAIN PROGRAM LOOP                             */
+/* -------------------------------------------------------------------------- */
+
 void UpdateMotors(){
     updateS1();             //update the stepper position / status based on the last data 
     updateS2();             //from serial commands
@@ -209,41 +214,64 @@ void UpdateMotors(){
     updateSV6();            //
 }
 
-
-
-
-
-/* -------------------------------------------------------------------------- */
-/*                              MAIN PROGRAM LOOP                             */
-/* -------------------------------------------------------------------------- */
-
-
-
 void UpdateServoStatus(){ //Update the servos active variable if any servos are active
     if(SV1STATE){
         ServosActive = true;
     }
-    if(SV2STATE){
+    else if(SV2STATE){
         ServosActive = true;
     }
-    if(SV3STATE){
+    else if(SV3STATE){
         ServosActive = true;
     }
-    if(SV4STATE){
+    else if(SV4STATE){
         ServosActive = true;
     }
-    if(SV5STATE){
+    else if(SV5STATE){
         ServosActive = true;
     }
-    if(SV6STATE){
+    else if(SV6STATE){
         ServosActive = true;
+    }
+    else{
+        ServosActive = false;
     }
 }
 
-
+void UpdateStepperStatus(){
+    if(S1STPC != S1ST2D){
+        SteppersActive = true;
+    }
+    else if(S2STPC != S2ST2D){
+        SteppersActive = true;
+    }
+    else if(S3STPC != S3ST2D){
+        SteppersActive = true;
+    }
+    else if (S4ST2D != S4STPC){
+        SteppersActive = true;
+    }
+    else if (S5STPC != S5ST2D){
+        SteppersActive = true;
+    }
+    else if (S5STPC != S5ST2D){
+        SteppersActive = true;
+    }
+    else if (S6STPC != S6ST2D){
+        SteppersActive = true;
+    }
+    else{
+        SteppersActive = false;
+    }
+}
 
 void loop(){
+    UpdateStepperStatus();
     UpdateServoStatus();
+
+    if(SteppersActive == false && ServosActive == false){
+        GetNextCommand();
+    }
     UpdateMotors();
 }
 
@@ -251,7 +279,7 @@ void loop(){
 /*                           SERIAL EVENT DETECTION                           */
 /* -------------------------------------------------------------------------- */
 
-void serialEvent(){                                     //Function that gets serial data and updates the command variables
+void GetNextCommand(){                                     //Function that gets serial data and updates the command variables
     while(Serial.available()){                          //checks if serial is available
         char inChar = (char)Serial.read();              //read the serial data
         incomingdata += inChar;                         //add the serial data to the incoming data variable
