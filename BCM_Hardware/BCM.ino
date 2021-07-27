@@ -22,7 +22,8 @@ String incomingdata = "";       //string that holds the incoming data from the s
 
 int pos[] = {0,0,0,0,0,0,0};    //array to store all the servo positions
 
-
+bool ServosActive = false;
+bool SteppersActive = false
 /* -------------------------------------------------------------------------- */
 /*                       STEPPER MOTOR WORKING VARIABLES                      */
 /* -------------------------------------------------------------------------- */
@@ -216,7 +217,33 @@ void UpdateMotors(){
 /*                              MAIN PROGRAM LOOP                             */
 /* -------------------------------------------------------------------------- */
 
+
+
+void UpdateServoStatus(){ //Update the servos active variable if any servos are active
+    if(SV1STATE){
+        ServosActive = true;
+    }
+    if(SV2STATE){
+        ServosActive = true;
+    }
+    if(SV3STATE){
+        ServosActive = true;
+    }
+    if(SV4STATE){
+        ServosActive = true;
+    }
+    if(SV5STATE){
+        ServosActive = true;
+    }
+    if(SV6STATE){
+        ServosActive = true;
+    }
+}
+
+
+
 void loop(){
+    UpdateServoStatus();
     UpdateMotors();
 }
 
@@ -249,7 +276,6 @@ void serialEvent(){                                     //Function that gets ser
 
     if(let_to_num(motornum) == 1){                      //check what the desired motor number is and if its a stepper based on alpha serial data
         S1STPC = 0;                                     //set the stepper motor current step counter to 0
-        S1ST2D = 0;                                     //set the stepper motor steps to do counter to 0
         S1ST2D = calcsteps(motordist.toInt());          //set the stepper motor steps to do to the number of steps calculated by the degrees in serial data
         S1SPDOFF = calcspeed(S1ST2D);                   //calculate and set the speed offset to make stepper arrived at desired time
         if(motordir == "F"){                            //check the desired motor directon
@@ -263,7 +289,6 @@ void serialEvent(){                                     //Function that gets ser
 
     else if(let_to_num(motornum) == 2){                      //same function as above
         S2STPC = 0;                                     //
-        S2ST2D = 0;                                     //
         S2ST2D = calcsteps(motordist.toInt());          //
         S2SPDOFF = calcspeed(S2ST2D);                   //
         if(motordir == "F"){                            //
@@ -277,7 +302,6 @@ void serialEvent(){                                     //Function that gets ser
 
     else if(let_to_num(motornum) == 3){
         S3STPC = 0;
-        S3ST2D = 0;
         S3ST2D = calcsteps(motordist.toInt());
         S3SPDOFF = calcspeed(S3ST2D);
         if(motordir == "F"){
@@ -291,7 +315,6 @@ void serialEvent(){                                     //Function that gets ser
 
     else if(let_to_num(motornum) == 4){
         S4STPC = 0;
-        S4ST2D = 0;
         S4ST2D = calcsteps(motordist.toInt());
         S4SPDOFF = calcspeed(S4ST2D);
         if(motordir == "F"){
@@ -305,7 +328,6 @@ void serialEvent(){                                     //Function that gets ser
 
     else if(let_to_num(motornum) == 5){
         S5STPC = 0;
-        S5ST2D = 0;
         S5ST2D = calcsteps(motordist.toInt());
         S5SPDOFF = calcspeed(S5ST2D);
         if(motordir == "F"){
@@ -319,7 +341,6 @@ void serialEvent(){                                     //Function that gets ser
 
     else if(let_to_num(motornum) == 6){
         S6STPC = 0;
-        S6ST2D = 0;
         S6ST2D = calcsteps(motordist.toInt());
         S6SPDOFF = calcspeed(S6ST2D);
         if(motordir == "F"){
