@@ -20,7 +20,8 @@ int sep1,sep2,sep3,sep4,sep5;   //all the seperating locations used to split up 
 
 String incomingdata = "";       //string that holds the incoming data from the serial port
 
-int pos[] = {0,0,0,0,0,0,0};    //array to store all the servo positions
+int pos[] = {0,0,0,0,0,0,0};    //array to store all the current servo positions
+int ServoInitialPosition = 0;
 
 bool ServosActive = false;
 bool SteppersActive = false
@@ -185,12 +186,12 @@ void setup(){                   //all the functions that run once when the MCU u
     servo4.attach(A3);      //
     servo5.attach(A2);      //
     servo6.attach(A1);      //
-    servo1.write(0);        //make sure all of the servos are locked in the 0 deg position
-    servo2.write(0);        //
-    servo3.write(0);        //
-    servo4.write(0);        //
-    servo5.write(0);        //
-    servo6.write(0);        //
+    servo1.write(ServoInitialPosition);        //make sure all of the servos are locked in the 0 deg position
+    servo2.write(ServoInitialPosition);        //
+    servo3.write(ServoInitialPosition);        //
+    servo4.write(ServoInitialPosition);        //
+    servo5.write(ServoInitialPosition);        //
+    servo6.write(ServoInitialPosition);        //
 }
 
 
@@ -199,7 +200,7 @@ void setup(){                   //all the functions that run once when the MCU u
 /* -------------------------------------------------------------------------- */
 
 void UpdateMotors(){
-    updateS1();             //update the stepper position / status based on the last data 
+    updateS1();             //update the stepper position / status based on the last data
     updateS2();             //from serial commands
     updateS3();             //
     updateS4();             //
@@ -208,13 +209,13 @@ void UpdateMotors(){
 
     updateSV1();            //update the servo position / status based on the last data
     updateSV2();            //from serial commands
-    updateSV3();            // 
+    updateSV3();            //
     updateSV4();            //
     updateSV5();            //
     updateSV6();            //
 }
 
-void UpdateServoStatus(){ //Update the servos active variable if any servos are active
+void UpdateServoStatus(){ //Update the servos active variable to True if any servos are active
     if(SV1STATE){
         ServosActive = true;
     }
@@ -238,7 +239,7 @@ void UpdateServoStatus(){ //Update the servos active variable if any servos are 
     }
 }
 
-void UpdateStepperStatus(){
+void UpdateStepperStatus(){       //Updates the steppers active variable to True if any servos are active
     if(S1STPC != S1ST2D){
         SteppersActive = true;
     }
@@ -266,13 +267,14 @@ void UpdateStepperStatus(){
 }
 
 void loop(){
-    UpdateStepperStatus();
-    UpdateServoStatus();
+    UpdateStepperStatus();  //get the statuses for steppers and servos
+    UpdateServoStatus();    //
 
-    if(SteppersActive == false && ServosActive == false){
-        GetNextCommand();
+    if(SteppersActive == false && ServosActive == false){       //Get the next serial command only if no servos and steppers are active
+        Serial.println("X");
+        GetNextCommand();                                       //Get the next serial command
     }
-    UpdateMotors();
+    UpdateMotors();                                             //Update all the motors
 }
 
 /* -------------------------------------------------------------------------- */
@@ -292,7 +294,7 @@ void GetNextCommand(){                                     //Function that gets 
     sep3 = incomingdata.indexOf(":",sep2+1);            //
     sep4 = incomingdata.indexOf(":",sep3+1);            //
     sep5 = incomingdata.indexOf(":",sep4+1);            //
-    
+
     motornum = incomingdata.substring(sep1+1,sep2);     //set the motor number from the serial data
     motordir = incomingdata.substring(sep2+1,sep3);     //set the motor direction from the serial data (applies only to steppers)
     motortime = incomingdata.substring(sep3+1,sep4);    //sets the desired time for action to take from serial data
@@ -308,8 +310,8 @@ void GetNextCommand(){                                     //Function that gets 
         S1SPDOFF = calcspeed(S1ST2D);                   //calculate and set the speed offset to make stepper arrived at desired time
         if(motordir == "F"){                            //check the desired motor directon
             S1DIR = true;                               //set the direction to true if the desired direction is forwards
-        }                               
-        
+        }
+
         else if(motordir == "B"){                            //check the desired motor direction
             S1DIR = false;                              //set the direction to false if the desired direction is backwards
         }
@@ -322,7 +324,7 @@ void GetNextCommand(){                                     //Function that gets 
         if(motordir == "F"){                            //
             S2DIR = true;                               //
         }
-        
+
         else if(motordir == "B"){
             S2DIR = false;
         }
@@ -335,7 +337,7 @@ void GetNextCommand(){                                     //Function that gets 
         if(motordir == "F"){
             S3DIR = true;
         }
-        
+
         else if(motordir == "B"){
             S3DIR = false;
         }
@@ -348,7 +350,7 @@ void GetNextCommand(){                                     //Function that gets 
         if(motordir == "F"){
             S4DIR = true;
         }
-        
+
         else if(motordir == "B"){
             S4DIR = false;
         }
@@ -361,7 +363,7 @@ void GetNextCommand(){                                     //Function that gets 
         if(motordir == "F"){
             S5DIR = true;
         }
-        
+
         else if(motordir == "B"){
             S5DIR = false;
         }
@@ -374,7 +376,7 @@ void GetNextCommand(){                                     //Function that gets 
         if(motordir == "F"){
             S6DIR = true;
         }
-        
+
         else if(motordir == "B"){
             S6DIR = false;
         }
@@ -385,7 +387,7 @@ void GetNextCommand(){                                     //Function that gets 
 /* -------------------------------------------------------------------------- */
 
     if(let_to_num(motornum) == 1+6){
-        SV1DEG = (motordist.toInt()/3)*2;   //Servos are 270 deg servos while the library is 180 based to compensate we have to calculate 2/3 of the desired angle 
+        SV1DEG = (motordist.toInt()/3)*2;   //Servos are 270 deg servos while the library is 180 based to compensate we have to calculate 2/3 of the desired angle
         long diff = SV1DEG - pos[1];
         diff = abs(diff);
         SV1TIME = motortime.toInt() / diff;
@@ -910,7 +912,7 @@ int calcsteps(int deg){                 //calculate how many steps the servo nee
     return(steps);
 }
 
-unsigned long calcspeed(int steps_){            
+unsigned long calcspeed(int steps_){
 
     unsigned long speedoffset;                            //calculate the offset to achieve desired stepper time
     long requestedspeed = motortime.toInt();            //convert the offset time to a long so we can work with numbers over 36000
