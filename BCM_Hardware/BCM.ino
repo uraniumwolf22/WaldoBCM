@@ -457,7 +457,7 @@ void updateSV1(){                                       //function to update the
     }
 
     if(currentmicro() >= SV1END && SV1B == false){
-        SV1B == true;
+        SV1B = true;
         SV1STATE = false;
         // Serial.println("update end");
         // Serial.println(pos[1]);
