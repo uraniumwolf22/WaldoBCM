@@ -24,7 +24,7 @@ int pos[] = {0,0,0,0,0,0,0};    //array to store all the current servo positions
 int ServoInitialPosition = 0;
 
 bool ServosActive = false;
-bool SteppersActive = false
+bool SteppersActive = false;
 /* -------------------------------------------------------------------------- */
 /*                       STEPPER MOTOR WORKING VARIABLES                      */
 /* -------------------------------------------------------------------------- */
@@ -833,7 +833,7 @@ void updateS6(){
             S6A = false;
             S6B = false;
             S6C = false;
-        }.
+        }
 
         if(currentmicro() >= S6START && currentmicro() <= S6MID && S6A == false){
             if(S6DIR == true){
@@ -842,7 +842,7 @@ void updateS6(){
 
             if(S6DIR == false){
                 digitalWrite(S6_D,LOW);
-            }||
+            }
 
             digitalWrite(S6_S,HIGH);
             S6A = true;
