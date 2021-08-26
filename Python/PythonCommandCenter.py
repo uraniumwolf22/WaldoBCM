@@ -8,8 +8,13 @@ themesetup()
 
 # Port Connection #
 
+<<<<<<< Updated upstream
 port = serial.Serial('COM5', baudrate=115200)
 port.write_timeout = 0.1
+=======
+port = serial.Serial('COM3', baudrate=115200)
+port.write_timeout = 0.05
+>>>>>>> Stashed changes
 port.read_timeout = 0.1
 print(f'Port opened at {port.name}')
 
