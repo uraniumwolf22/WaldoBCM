@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 from theme import themesetup
-from time import sleep
+# from time import sleep
 import serial
 # import io
 
@@ -8,24 +8,21 @@ themesetup()
 
 # Port Connection #
 
+<<<<<<< Updated upstream
 port = serial.Serial('COM5', baudrate=115200)
+port.write_timeout = 0.1
+=======
+port = serial.Serial('COM3', baudrate=115200)
 port.write_timeout = 0.05
+>>>>>>> Stashed changes
 port.read_timeout = 0.1
 print(f'Port opened at {port.name}')
 
 # Window Layout #
 
 leftcol = [
-           [sg.Text('Step Size'), sg.Spin([i for i in range(1,360)], initial_value=15, size=(6,1))],
-           [sg.Text('Step Speed'), sg.Spin([i for i in range(1,500)], initial_value=250, size=(5,1))],
-           # [sg.Listbox(values=['Placeholder', 'More Placeholder', 'etc.'], no_scrollbar=True, s=(19,8), enable_events=True, k='Preset')]
-           [sg.Listbox(values=['A', 'B', 'C', 'D', 'E', 'F'], font=('Consolas', 12), size=(7,6), no_scrollbar=True, select_mode='multiple'),
-            sg.Listbox(values=['G', 'H', 'I', 'J', 'K', 'L'], font=('Consolas', 12), size=(7,6), no_scrollbar=True, select_mode='multiple')]
-]
-
-rightcol = [
-            # [sg.Radio('Step', 2, True), sg.Radio('Servo', 2)],
-            [sg.Output(s=(14,11), echo_stdout_stderr=True)]
+           [sg.Radio('1', 1, True), sg.Radio('5', 1), sg.Radio('10', 1)],
+           [sg.Listbox(values=['Placeholder', 'More Placeholder', 'etc.'], no_scrollbar=True, s=(18,9), enable_events=True, k='Preset')]
 ]
 
 dirbuttons = [
@@ -39,20 +36,17 @@ dirbuttons = [
 layout = [
           [sg.Column(leftcol, vertical_alignment='bottom'),
            sg.Column(dirbuttons, element_justification='center'),
-           sg.Column(rightcol)]
+           sg.Column([[sg.Output(s=(10,10), echo_stdout_stderr=True)]])]
 ]
 
-window = sg.Window('BMC Controller', layout, font=('Consolas', 10))
+window = sg.Window('BMC Controller', layout)
 
 # Main Loop #
 
-def motorMove(pos, dir, time, step):
+def motorMove(pos, dir, type='S', step='A'):
     try:
-        command = (':'+':'.join([pos, dir, time, step])+':')
-        print(command)
-        port.write(command.encode())
-        # port.read_until('X'.encode())
-
+        port.write((type+pos+step+dir).encode())
+        port.read_until('X'.encode())
     except serial.serialutil.SerialTimeoutException: print('Timed out!')
 
 while True:
@@ -63,13 +57,7 @@ while True:
         break
 
     if event != '': print(event)
-    motors = values[2] + values[3]
-    time = str(values[1])
-    step = str(values[0])
+    step = 'A' if values[0] else 'B' if values[1] else 'C'
 
-    if event == 'F':
-        for i in motors: motorMove(i, 'F', time, step)
-        sleep(int(time)/1000)
-    if event == 'B':
-        for i in motors: motorMove(i, 'B', time, step)
-        sleep(int(time)/1000)
+    if event == 'F': motorMove('A', 'F', step=step)
+    if event == 'B': motorMove('A', 'B', step=step)

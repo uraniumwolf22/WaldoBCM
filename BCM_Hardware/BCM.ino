@@ -1,5 +1,6 @@
-//Waldo Body Control Module serial control software
-//Created with care by Logan Ross <3
+//Waldo body control Firmware for the operation of
+//6 stepper motors and 6 servos with serial interface
+//Created with love by Logan Ross <3
 
 #include<Servo.h>
 #include "pinmapping.h"
