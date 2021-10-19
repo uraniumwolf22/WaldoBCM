@@ -22,7 +22,7 @@ def update(deg, dist, line):
     plt.pause(0.001)
     return line,
 
-port = RPLidar('COM7')
+port = RPLidar('COM5')
 
 print(port.get_info())
 print(port.get_health())
