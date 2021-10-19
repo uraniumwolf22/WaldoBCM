@@ -18,4 +18,4 @@ while 1:
     for i in scan:
         deg.append(math.radians(i[1]))
         dist.append(i[2])
-    print(deg,dist)
+    #print(deg,dist)
