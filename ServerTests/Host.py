@@ -33,10 +33,12 @@ async def send(ws, path):
     message = await ws.recv()
     print(json.loads(message))
 
-    while True:
-        global packet
-        await ws.send(packet)
-        await asyncio.sleep(0)
+    global packet
+    if packet:
+        while True:
+            global packet
+            await ws.send(packet)
+            await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
