@@ -4,7 +4,7 @@ import math
 import json
 
 global packet
-packet = [[.5],[1000]]
+packet = [[0],[0]]
 
 async def recv(ws, path):
     while True:
@@ -39,9 +39,8 @@ async def send(ws, path):
     global packet
     if packet:
         while True:
-            global packet
             await ws.send(json.dumps(packet))
-            await asyncio.sleep(0.001)
+            await asyncio.sleep(1)
 
 
 if __name__ == "__main__":
