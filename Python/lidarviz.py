@@ -26,8 +26,15 @@ def update(deg, dist, line):
     plt.pause(0.001)
     return line,
 
+<<<<<<< HEAD
 predeg = []
 predist = []
+=======
+port = RPLidar('COM5')
+
+print(port.get_info())
+print(port.get_health())
+>>>>>>> d99a96796e8fbb6b03818bca5cf76808db613e52
 
 for scan in port.iter_scans(scan_type='express'):
     deg, dist, avgdeg, avgdist = [], [], [], []
