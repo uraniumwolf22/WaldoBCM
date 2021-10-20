@@ -11,7 +11,7 @@ PORT = 8000            # The same port as used by the server
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
 
-for scan in liport.iter_scans(scan_type='express',max_buf_meas=1000000):
+for scan in liport.iter_scans(scan_type='express'):
     # print(scan)
     s.sendall(json.dumps(scan).encode())
     # response = s.recv(1024)
