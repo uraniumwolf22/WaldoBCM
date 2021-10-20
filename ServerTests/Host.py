@@ -3,6 +3,9 @@ import asyncio
 import math
 import json
 
+global packet
+packet = [[.5],[1000]]
+
 async def recv(ws, path):
     while True:
         print("SCAN RESET")
@@ -19,7 +22,7 @@ async def recv(ws, path):
         print(deg, dist)
 
         global packet
-        packet = json.dumps([deg,dist])
+        packet = [deg,dist]
 
         x = []
         y = []
@@ -37,8 +40,8 @@ async def send(ws, path):
     if packet:
         while True:
             global packet
-            await ws.send(packet)
-            await asyncio.sleep(0)
+            await ws.send(json.dumps(packet))
+            await asyncio.sleep(0.001)
 
 
 if __name__ == "__main__":
