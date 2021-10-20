@@ -13,16 +13,66 @@ conn, addr = s.accept()
 print('Connected by', addr)
 
 while 1:
+    x = []
+    y = []
+    print("SCAN RESET")
     data = conn.recv(16384)
     if not data: break
-    # conn.sendto('success'.encode(), addr)
     try: scan = json.loads(data.decode())
     except json.decoder.JSONDecodeError: continue
 
     deg = []
     dist = []
+
+
     for i in scan:
-        deg.append(math.radians(i[1]))
-        dist.append(i[2])
-    print(deg, dist)
+        deg.append((math.radians(i[1])) * 180 / math.pi )
+        dist.append((i[2]))
+    # print(deg, dist)
+    # print("deg = ",deg)
+
+    for pair in range(len(deg)):
+        if deg[pair] == 0:
+            x.append(0)
+            y.append(dist[pair])
+
+        if deg[pair] == 90:
+            x.append(dist(pair))
+            y.append(0)
+
+        if deg[pair] == 180:
+            x.append(0)
+            y.append(0 - dist[pair])
+
+        if deg[pair] == 270:
+            x.append(0 - dist[pair])
+            y.append(0)
+
+
+        if deg[pair] > 0 and deg[pair] < 90:
+            x.append(dist[pair] * math.cos(deg[pair]))
+            y.append(dist[pair] * math.sin(deg[pair]))
+            print("x = ", x[pair])
+            print("y = ", y[pair])
+
+
+        if deg[pair] > 90 and deg[pair] < 180:
+            x.append(dist[pair] * (math.sin(deg[pair] - 90)))
+            y.append(0 - (dist[pair] * (math.cos(deg[pair] - 90))))
+            print("x = ", x[pair])
+            print("y = ", y[pair])            
+
+
+        if deg[pair] > 180 and deg[pair] < 270:
+            x.append(0 - (dist[pair] * math.cos(deg[pair])))
+            y.append(0 - (dist[pair] * math.sin(deg[pair])))
+            print("x = ", x[pair])
+            print("y = ", y[pair])
+
+        if deg[pair] > 270 and deg[pair] < 360:
+            x.append(0 - (dist[pair] * (math.sin(deg[pair] - 90))))
+            y.append(dist[pair] * (math.cos(deg[pair] - 90)))
+            print("x = ", x[pair])
+            print("y = ", y[pair])   
+
 conn.close()
