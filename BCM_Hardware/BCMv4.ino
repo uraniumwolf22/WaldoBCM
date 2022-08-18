@@ -222,28 +222,30 @@ void StepControl(int num, bool action) {
     }
 }
 //=====================================================================================================================================
-void SwitchStepperDirection(int num, bool dir) {
-    if (num == 0) {
+
+void SwitchStepperDirecton(int num, bool dir) {
+    switch (num) {
+    case 0:
         if (dir == true) { digitalWrite(S1_D, HIGH); }
         else { digitalWrite(S1_D, LOW); }
-    }
-    else if (num == 1) {
+
+    case 1:
         if (dir == true) { digitalWrite(S2_D, HIGH); }
         else { digitalWrite(S2_D, LOW); }
-    }
-    else if (num == 2) {
+
+    case 2:
         if (dir == true) { digitalWrite(S3_D, HIGH); }
         else { digitalWrite(S3_D, LOW); }
-    }
-    else if (num == 3) {
+
+    case 3:
         if (dir == true) { digitalWrite(S4_D, HIGH); }
         else { digitalWrite(S4_D, HIGH); }
-    }
-    else if (num == 4) {
+
+    case 4:
         if (dir == true) { digitalWrite(S5_D, HIGH); }
         else { digitalWrite(S5_D, LOW); }
-    }
-    else if (num == 5) {
+
+    case 5:
         if (dir == true) { digitalWrite(S6_D, HIGH); }
         else { digitalWrite(S6_D, LOW); }
     }

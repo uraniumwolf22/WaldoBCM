@@ -3,32 +3,32 @@
 
 
 struct Stepperdata {
-	bool SSTATE[] = { false,false,false,false,false,false };            //Stepper state
-	bool SDIR[] = { false,false,false,false,false,false };              //Stepper direction
-	bool SA[] = { false,false,false,false,false,false };                //Stepper checkpoint A
-	bool SB[] = { false,false,false,false,false,false };                //Stepper checkpoint B
-	bool SC[] = { false,false,false,false,false,false };                //Stepper checkpoint C
+	bool SSTATE[6];            //Stepper state
+	bool SDIR[6];              //Stepper direction
+	bool SA[6];                //Stepper checkpoint A
+	bool SB[6];                //Stepper checkpoint B
+	bool SC[6];                //Stepper checkpoint C
 
-	unsigned long SSPDOFF[] = { 0,0,0,0,0,0 };                          //Stepper speed offset
-	unsigned long SSTART[] = { 0,0,0,0,0,0 };                           //Stepper start time
-	unsigned long SMID[] = { 0,0,0,0,0,0 };                             //Stepper midpoint time
-	unsigned long SEND[] = { 0,0,0,0,0,0 };                             //Stepper end time
+	unsigned long SSPDOFF[6];  //Stepper speed offset
+	unsigned long SSTART[6];   //Stepper start time
+	unsigned long SMID[6];     //Stepper midpoint time
+	unsigned long SEND[6];     //Stepper end time
 
-	int SSTPC[] = { 0,0,0,0,0,0 };                                      //Stepper current step count
-	int SST2D[] = { 0,0,0,0,0,0 };                                      //Stepper steps to do
+	int SSTPC[6];              //Stepper current step count
+	int SST2D[6];              //Stepper steps to do
 };
 
 struct Servodata {
 
-	int pos[] = { 0,0,0,0,0,0 };                                          //Current ideal position of all servos
-	bool SVCHANGEEN[] = { false,false,false,false,false,false };        //Servo change enabled
-	bool SVSTATE[] = { false,false,false,false,false,false };           //Servo state
-	bool SVA[] = { false,false,false,false,false,false };               //Servo checkpoint A
-	bool SVB[] = { false,false,false,false,false,false };               //Servo checkpoint B
+	int pos[6];                //Current ideal position of all servos
+	bool SVCHANGEEN[6];        //Servo change enabled
+	bool SVSTATE[6];           //Servo state
+	bool SVA[6];               //Servo checkpoint A
+	bool SVB[6];               //Servo checkpoint B
 
-	unsigned long SVSTART[] = { 0,0,0,0,0,0 };                          //Servo start time
-	unsigned long SVEND[] = { 0,0,0,0,0,0 };                            //Servo end time
-	unsigned long SVTIME[] = { 0,0,0,0,0,0 };                              //servo time
+	unsigned long SVSTART[6];  //Servo start time
+	unsigned long SVEND[6];    //Servo end time
+	unsigned long SVTIME[6];   //servo time
 
-	int SVDEG[] = { 0,0,0,0,0,0 };                                      //Servo current deg
+	int SVDEG[6];              //Servo current deg
 };
